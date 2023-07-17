@@ -1,0 +1,8 @@
+# General
+asgiref
+Django==4.2.3
+sqlparse
+Pillow
+
+# Third Party
+python-decouple
