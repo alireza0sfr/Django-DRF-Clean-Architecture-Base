@@ -4,5 +4,10 @@ Django==4.2.3
 sqlparse
 Pillow
 
+# DRF
+djangorestframework
+
 # Third Party
 python-decouple
+markdown
+django-filter
