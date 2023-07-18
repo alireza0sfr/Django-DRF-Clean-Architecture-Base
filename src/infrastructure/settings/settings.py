@@ -186,3 +186,45 @@ SPECTACULAR_SETTINGS = {
         "displayOperationId": True,
     },
 }
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": config('LOG_LEVEL'),
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "filters": ["require_debug_true"],
+        },
+        'file': {
+            "level": config('LOG_LEVEL'),
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
+            'formatter': 'verbose',
+        },
+        'seq': {
+            "level": config('LOG_LEVEL'),
+            'class': 'seqlog.SeqHandler',
+            'url': 'http://seq:5341',
+        },
+    },
+    "root": {
+        "handlers": ["console", 'file', 'seq'],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", 'file', 'seq'],
+            "level": config('LOG_LEVEL'),
+            "propagate": False,
+        },
+    },
+}
