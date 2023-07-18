@@ -13,3 +13,4 @@ djangorestframework-simplejwt
 python-decouple
 markdown
 django-filter
+drf-spectacular
