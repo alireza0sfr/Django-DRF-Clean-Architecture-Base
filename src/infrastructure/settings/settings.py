@@ -164,6 +164,10 @@ REST_FRAMEWORK = {
         'no_underscore_before_number': True,
     },
 
+    'JSON_CAMEL_CASE': {
+        'RENDERER_CLASS': 'presentation.common.renderers.CustomJSONRenderer'
+    },
+
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
