@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    container_name: backend
+    command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ../core:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=django-insecure-9mx7%17wg3sghh&2ep7b51tadw21tp57bdfd)=2ns=7_o4tnmy
+      - DEBUG=True
+      - ALLOWED_HOSTS=0.0.0.0
+      - SUPERUSER_USERNAME=admin
+      - SUPERUSER_PASSWORD=!@#QWE123qwe

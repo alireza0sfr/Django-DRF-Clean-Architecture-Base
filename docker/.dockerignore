@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -15,7 +15,6 @@ cython_debug/
 
 # Django stuff:
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -39,13 +38,14 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Environments
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Docker
+Dockerfile
+docker-compose.yaml
+
+# Git
+.git
+.gitattributes
+.gitignore
 
 # Installer logs
 pip-log.txt
@@ -54,6 +54,10 @@ pip-delete-this-directory.txt
 # PEP 582
 __pypackages__/
 
+# Project stuff
+LICENSE
+README.md
+
 # PyBuilder
 .pybuilder/
 target/
@@ -61,7 +65,7 @@ target/
 # pyenv
 .python-version
 
-# PyInstaller
+# PyInstaller.
 *.manifest
 *.spec
 
@@ -85,6 +89,7 @@ coverage.xml
 cover/
 
 # Sphinx documentation
+docs/
 docs/_build/
 
 # VSCode Editor
