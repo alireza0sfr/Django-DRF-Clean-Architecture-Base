@@ -21,3 +21,8 @@ seqlog
 # Refactoring & Lint
 black
 flake8
+
+# Background Process & Cache
+django-redis
+celery
+django-celery-beat

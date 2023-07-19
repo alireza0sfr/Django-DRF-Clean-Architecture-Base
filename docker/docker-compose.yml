@@ -1,5 +1,14 @@
 version: "3.9"
 services:
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+    - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
   seq:
     image: datalust/seq:latest
     container_name: seq
@@ -22,6 +31,7 @@ services:
     volumes:
       - ../src:/app
     depends_on:
+      - redis
       - seq
     ports:
       - "8000:8000"
@@ -37,6 +47,29 @@ services:
       
       - SUPERUSER_USERNAME=admin
       - SUPERUSER_PASSWORD=!@#QWE123qwe
+
+  worker:
+    build: .
+    container_name: worker
+    command: celery -A core worker --loglevel=info
+    restart: always
+    volumes:
+      - ./core:/app
+    depends_on:
+      - redis
+      - backend
+  
+  beat:
+    build: .
+    container_name: beat
+    command: celery -A core beat --loglevel=info
+    restart: always
+    volumes:
+      - ./core:/app
+    depends_on:
+      - worker
+      - redis
+      - backend
 
 volumes:
   seq-data:
