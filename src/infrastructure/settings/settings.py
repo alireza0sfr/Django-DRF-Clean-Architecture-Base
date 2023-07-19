@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -215,12 +215,12 @@ LOGGING = {
         },
     },
     "root": {
-        "handlers": ["console", 'file', 'seq'],
+        "handlers": config('LOG_HANDLERS', cast=Csv()),
         "level": "WARNING",
     },
     "loggers": {
         "django": {
-            "handlers": ["console", 'file', 'seq'],
+            "handlers": config('LOG_HANDLERS', cast=Csv()),
             "level": config('CONSOLE_LOG_LEVEL'),
             "propagate": False,
         },
