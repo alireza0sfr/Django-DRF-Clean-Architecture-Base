@@ -73,5 +73,19 @@ services:
       - backend
       - worker
 
+  locust:
+    image: locustio/locust
+    ports:
+     - "8089:8089"
+    volumes:
+      - ../src/infrastructure/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
+  
+  locustworker:
+    image: locustio/locust
+    volumes:
+      - ../src/infrastructure/locust:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
+
 volumes:
   seq-data:
