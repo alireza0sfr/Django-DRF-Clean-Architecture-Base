@@ -26,7 +26,9 @@ services:
     environment:
       - SECRET_KEY=django-insecure-9mx7%17wg3sghh&2ep7b51tadw21tp57bdfd)=2ns=7_o4tnmy
       - DEBUG=True
-      - LOG_LEVEL=INFO
+      - SEQ_LOG_LEVEL=INFO
+      - FILE_LOG_LEVEL=INFO
+      - CONSOLE_LOG_LEVEL=INFO
       - ALLOWED_HOSTS=0.0.0.0
       - SUPERUSER_USERNAME=admin
       - SUPERUSER_PASSWORD=!@#QWE123qwe

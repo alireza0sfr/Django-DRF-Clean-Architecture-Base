@@ -197,24 +197,24 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '{levelname} | {asctime} | {module} {message}',
             'style': '{',
         },
     },
     "handlers": {
         "console": {
-            "level": config('LOG_LEVEL'),
+            "level": config('CONSOLE_LOG_LEVEL'),
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
         'file': {
-            "level": config('LOG_LEVEL'),
+            "level": config('FILE_LOG_LEVEL'),
             'class': 'logging.FileHandler',
             'filename': 'django.log',
             'formatter': 'verbose',
         },
         'seq': {
-            "level": config('LOG_LEVEL'),
+            "level": config('SEQ_LOG_LEVEL'),
             'class': 'seqlog.SeqLogHandler',
             'server_url': 'http://seq:5341',
         },
@@ -226,7 +226,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console", 'file', 'seq'],
-            "level": config('LOG_LEVEL'),
+            "level": config('CONSOLE_LOG_LEVEL'),
             "propagate": False,
         },
     },
