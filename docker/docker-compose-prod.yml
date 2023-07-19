@@ -20,6 +20,13 @@ services:
     volumes:
       - seq-data:/data
 
+  db:
+    container_name: db
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
     build:
       context: ..
@@ -32,6 +39,7 @@ services:
     depends_on:
       - redis
       - seq
+      - db
     ports:
       - "8000:8000"
     environment:
@@ -54,6 +62,13 @@ services:
       - EMAIL_DEFAULT_FROM_EMAIL=john.doe@example.com
       - EMAIL_USE_SSL=True
       - EMAIL_USE_TLS=False
+
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=postgres
+      - DB_USER=sa
+      - DB_PASS=!@#QWE123qwe
+      - DB_HOST=db
+      - DB_PORT=5432
 
   worker:
     build: .
@@ -100,3 +115,4 @@ volumes:
   seq-data:
   static_volume:
   media_volume:
+  postgres_data:

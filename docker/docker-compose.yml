@@ -21,6 +21,13 @@ services:
     volumes:
       - seq-data:/data
 
+  db:
+    container_name: db
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
     build:
       context: ..
@@ -33,6 +40,7 @@ services:
     depends_on:
       - redis
       - seq
+      - db
     ports:
       - "8000:8000"
     environment:
@@ -47,6 +55,13 @@ services:
       
       - SUPERUSER_USERNAME=admin
       - SUPERUSER_PASSWORD=!@#QWE123qwe
+
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=postgres
+      - DB_USER=sa
+      - DB_PASS=!@#QWE123qwe
+      - DB_HOST=db
+      - DB_PORT=5432
 
   worker:
     build: .
@@ -105,3 +120,4 @@ services:
 volumes:
   seq-data:
   smtp4dev-data:
+  postgres_data:
