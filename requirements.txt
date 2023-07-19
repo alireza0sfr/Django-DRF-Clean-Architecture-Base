@@ -26,3 +26,9 @@ flake8
 django-redis
 celery
 django-celery-beat
+
+# Test
+pytest
+pytest-django
+pytest-cov
+factory_boy
