@@ -87,5 +87,21 @@ services:
       - ../src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --worker --master-host master
 
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      # Change the number before : to the port the web interface should be accessible on
+      - '5000:80'
+      # Change the number before : to the port the SMTP server should be accessible on
+      - '25:25'
+      # Change the number before : to the port the IMAP server should be accessible on
+      - '143:143'
+    volumes:
+        - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__HostName=smtp4dev
+
 volumes:
   seq-data:
+  smtp4dev-data:

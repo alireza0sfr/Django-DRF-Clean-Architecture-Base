@@ -234,7 +234,7 @@ LOGGING = {
 }
 
 # security configs for production
-if not config('DEBUG', cast=bool):
+if not DEBUG:
     # Https settings
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -274,3 +274,23 @@ CACHES = {
         }
     }
 }
+
+# Email Configurations for production and development
+if DEBUG:    
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_TLS = False
+    EMAIL_HOST = "smtp4dev"
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
+    EMAIL_PORT = 25
+else:
+    EMAIL_BACKEND = config(
+        "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+    )
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT', cast=int)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+    DEFAULT_FROM_EMAIL = config('EMAIL_DEFAULT_FROM_EMAIL')

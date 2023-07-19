@@ -47,6 +47,14 @@ services:
       - SUPERUSER_USERNAME=admin
       - SUPERUSER_PASSWORD=!@#QWE123qwe
 
+      - EMAIL_HOST=mail.example.come
+      - EMAIL_PORT=465
+      - EMAIL_HOST_USER=john.doe@example.com
+      - EMAIL_HOST_PASSWORD=password
+      - EMAIL_DEFAULT_FROM_EMAIL=john.doe@example.com
+      - EMAIL_USE_SSL=True
+      - EMAIL_USE_TLS=False
+
   worker:
     build: .
     container_name: worker

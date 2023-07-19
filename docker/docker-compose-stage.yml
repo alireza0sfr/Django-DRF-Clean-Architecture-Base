@@ -26,7 +26,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: backend
     restart: always
-    command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
     volumes:
       - ../src:/app
     depends_on:
@@ -37,7 +37,7 @@ services:
     environment:
       - SECRET_KEY=django-insecure-9mx7%17wg3sghh&2ep7b51tadw21tp57bdfd)=2ns=7_o4tnmy
       - DEBUG=True
-      - ALLOWED_HOSTS=*
+      - ALLOWED_HOSTS=0.0.0.0
 
       - SEQ_LOG_LEVEL=INFO
       - FILE_LOG_LEVEL=INFO
@@ -46,6 +46,14 @@ services:
       
       - SUPERUSER_USERNAME=admin
       - SUPERUSER_PASSWORD=!@#QWE123qwe
+
+      - EMAIL_HOST=mail.example.come
+      - EMAIL_PORT=465
+      - EMAIL_HOST_USER=john.doe@example.com
+      - EMAIL_HOST_PASSWORD=password
+      - EMAIL_DEFAULT_FROM_EMAIL=john.doe@example.com
+      - EMAIL_USE_SSL=True
+      - EMAIL_USE_TLS=False
 
   worker:
     build: .
