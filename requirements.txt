@@ -17,3 +17,7 @@ django-cors-headers
 
 # Logging
 seqlog
+
+# Refactoring & Lint
+black
+flake8
