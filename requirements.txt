@@ -32,3 +32,6 @@ pytest
 pytest-django
 pytest-cov
 factory_boy
+
+# Deployment
+gunicorn

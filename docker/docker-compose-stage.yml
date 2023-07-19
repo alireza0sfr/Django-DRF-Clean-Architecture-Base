@@ -1,6 +1,5 @@
 version: "3.9"
 services:
-
   redis:
     container_name: redis
     image: redis
@@ -36,9 +35,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=test
+      - SECRET_KEY=django-insecure-9mx7%17wg3sghh&2ep7b51tadw21tp57bdfd)=2ns=7_o4tnmy
       - DEBUG=True
-      - ALLOWED_HOSTS=0.0.0.0
+      - ALLOWED_HOSTS=*
 
       - SEQ_LOG_LEVEL=INFO
       - FILE_LOG_LEVEL=INFO
@@ -73,5 +72,23 @@ services:
       - backend
       - worker
 
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports: 
+      - "80:80"
+    volumes:
+      - ../nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/home/app/static
+      - media_volume:/home/app/media
+    depends_on:
+      - redis
+      - seq
+      - backend
+      - worker
+
 volumes:
   seq-data:
+  static_volume:
+  media_volume:
