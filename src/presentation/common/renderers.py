@@ -1,21 +1,18 @@
 from rest_framework.renderers import JSONRenderer
+from rest_framework import status
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
 class CustomJSONRenderer(JSONRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         status_code = renderer_context['response'].status_code
+        
         response = {
-          'success': False,
-          'data': None,
-          'message': ''
+          'success': status_code and str(status_code).startswith('2'),
+          'code': status_code if status_code else status.HTTP_400_BAD_REQUEST,
+          'message': data.get('message') if data.get('message') else '',
+          'data': data.get('data') if data.get('data') else None,
         }
 
-        if str(status_code).startswith('2'):
-            response['success'] = True
-            response['data'] = data
-            try:
-                response['message'] = renderer_context['response'].message
-            except KeyError:
-                response['data'] = data
-
-        return super(CustomJSONRenderer, self).render(response, accepted_media_type, renderer_context)
+        camelize = CamelCaseJSONRenderer().render(response, accepted_media_type, renderer_context)
+        return camelize

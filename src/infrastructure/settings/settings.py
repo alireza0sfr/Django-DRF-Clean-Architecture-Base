@@ -147,8 +147,9 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_RENDERER_CLASSES': (
-        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
-        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+        'presentation.common.renderers.CustomJSONRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
         # Any other renders
     ),
 
@@ -162,10 +163,6 @@ REST_FRAMEWORK = {
 
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
-    },
-
-    'JSON_CAMEL_CASE': {
-        'RENDERER_CLASS': 'presentation.common.renderers.CustomJSONRenderer'
     },
 
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
