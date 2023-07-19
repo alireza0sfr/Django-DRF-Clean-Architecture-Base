@@ -205,8 +205,7 @@ LOGGING = {
         "console": {
             "level": config('LOG_LEVEL'),
             "class": "logging.StreamHandler",
-            "formatter": "simple",
-            "filters": ["require_debug_true"],
+            "formatter": "verbose",
         },
         'file': {
             "level": config('LOG_LEVEL'),
@@ -216,8 +215,8 @@ LOGGING = {
         },
         'seq': {
             "level": config('LOG_LEVEL'),
-            'class': 'seqlog.SeqHandler',
-            'url': 'http://seq:5341',
+            'class': 'seqlog.SeqLogHandler',
+            'server_url': 'http://seq:5341',
         },
     },
     "root": {
