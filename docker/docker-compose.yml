@@ -19,6 +19,8 @@ services:
     container_name: backend
     restart: always
     command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ../src:/app
     depends_on:
       - seq
     ports:

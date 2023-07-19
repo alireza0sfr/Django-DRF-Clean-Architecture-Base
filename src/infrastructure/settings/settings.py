@@ -210,7 +210,7 @@ LOGGING = {
         'file': {
             "level": config('FILE_LOG_LEVEL'),
             'class': 'logging.FileHandler',
-            'filename': 'django.log',
+            'filename': BASE_DIR / 'django.log',
             'formatter': 'verbose',
         },
         'seq': {
