@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     
     # Third Party
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -246,3 +248,10 @@ if not config('DEBUG', cast=bool):
     SECURE_REFERRER_POLICY = "strict-origin"
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# CORS
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8080',
+#     'http://localhost:8081'
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
