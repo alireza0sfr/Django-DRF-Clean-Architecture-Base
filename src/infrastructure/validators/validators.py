@@ -11,15 +11,17 @@ class Validator:
 
 		for key, value in validators.items():
 			prop = data.get(key)
-			validator = value if isinstance(
-				value, BaseValidator) else value.value()
-			validated = validator.validate(prop)
+			
+			for index, v in enumerate(value):
 
-			if not validated:
-				errors.append({
-					'message': message_generator(key) if message_generator else validator.message_generator(key),
-					'value': prop,
-				})
+				validator = v if isinstance(v, BaseValidator) else v.value()
+				validated = validator.validate(prop)
+
+				if not validated:
+					errors.append({
+						'message': message_generator(key) if message_generator else validator.message_generator(key),
+						'value': prop,
+					})
 
 		return errors
 
@@ -62,8 +64,8 @@ class VEmail(BaseValidator):
 
 class TValidators(Enum):
 	NotEmpty = VNotEmpty
-	VCustom = VCustom
-	VEmail = VEmail
+	Custom = VCustom
+	Email = VEmail
 
 
 def is_empty(value):
