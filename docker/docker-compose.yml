@@ -31,7 +31,7 @@ services:
   backend:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile-dev
     container_name: backend
     restart: always
     command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
@@ -43,6 +43,7 @@ services:
       - db
     ports:
       - "8000:8000"
+      - "5678:5678"
     environment:
       - SECRET_KEY=test
       - DEBUG=True
