@@ -3,6 +3,9 @@ asgiref
 Django==4.2.3
 sqlparse
 
+# Database Client
+psycopg[binary,pool]
+
 # DRF
 djangorestframework
 djangorestframework-camel-case
