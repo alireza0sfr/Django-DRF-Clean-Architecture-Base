@@ -1,5 +1,5 @@
 version: "3.9"
-project_name: Django-DRF-Clean-Architecture-Base
+name: django-drf-clean-architecture-base
 services:
 
   redis:
@@ -73,10 +73,8 @@ services:
     command: celery -A core worker --loglevel=info
     restart: always
     volumes:
-      - ../src:/app
+      - ./src:/app
     depends_on:
-      - redis
-      - seq
       - backend
   
   beat:
@@ -87,11 +85,8 @@ services:
     command: celery -A core beat --loglevel=info
     restart: always
     volumes:
-      - ../src:/app
+      - ./src:/app
     depends_on:
-      - redis
-      - seq
-      - backend
       - worker
 
   locust:
@@ -99,13 +94,13 @@ services:
     ports:
      - "8089:8089"
     volumes:
-      - ../src/infrastructure/locust:/mnt/locust
+      - ./src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
   
   locustworker:
     image: locustio/locust
     volumes:
-      - ../src/infrastructure/locust:/mnt/locust
+      - ./src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --worker --master-host master
 
   smtp4dev:
