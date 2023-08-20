@@ -52,10 +52,12 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    command: celery -A core worker --loglevel=info
+    command: celery -A infrastructure.celery.celery:app worker --loglevel=info
     restart: always
     volumes:
       - ../src:/app
+    env_file:
+      - ../envs/prod/backend/.env
     depends_on:
       - backend
   
@@ -64,10 +66,12 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: beat
-    command: celery -A core beat --loglevel=info
+    command: celery -A infrastructure.celery.celery:app beat --loglevel=info
     restart: always
     volumes:
       - ../src:/app
+    env_file:
+      - ../envs/prod/backend/.env
     depends_on:
       - worker
 

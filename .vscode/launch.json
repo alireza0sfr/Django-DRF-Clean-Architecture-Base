@@ -7,7 +7,7 @@
       "request": "attach",
       "pathMappings": [
         {
-          "localRoot": "${workspaceFolder}/core",
+          "localRoot": "${workspaceFolder}/src",
           "remoteRoot": "/app"
         }
       ],

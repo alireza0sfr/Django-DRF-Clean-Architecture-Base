@@ -151,7 +151,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
 
     'DEFAULT_RENDERER_CLASSES': (
@@ -178,10 +177,10 @@ REST_FRAMEWORK = {
 
 
 # Jwt
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-}
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+# }
 
 # DRF spectacular
 SPECTACULAR_SETTINGS = {
