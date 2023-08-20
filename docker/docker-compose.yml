@@ -91,7 +91,7 @@ services:
     image: locustio/locust
     volumes:
       - ../src/infrastructure/locust:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --worker --master-host master
+    command: -f /mnt/locust/locustfile.py --worker --master-host locust
 
   smtp4dev:
     image: rnwood/smtp4dev:v3
