@@ -6,7 +6,6 @@ sqlparse
 # DRF
 djangorestframework
 djangorestframework-camel-case
-djangorestframework-simplejwt
 
 # Third Party
 python-decouple
