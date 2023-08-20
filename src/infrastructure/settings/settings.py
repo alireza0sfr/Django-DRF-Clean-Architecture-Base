@@ -91,8 +91,8 @@ DATABASES = {
         "NAME": config('DB_NAME'),
         "USER": config('DB_USER'),
         "PASSWORD": config('DB_PASS'),
-        "HOST": config('PGDB_HOST'),
-        "PORT": config('PGDB_PORT', cast=int),
+        "HOST": config('DB_HOST'),
+        "PORT": config('DB_PORT', cast=int),
     }
 }
 

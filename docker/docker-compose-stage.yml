@@ -27,6 +27,8 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../envs/stage/db/.env
 
   backend:
     build:
@@ -36,40 +38,15 @@ services:
     restart: always
     command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - redis
       - seq
       - db
     ports:
       - "8000:8000"
-    environment:
-      - SECRET_KEY=django-insecure-9mx7%17wg3sghh&2ep7b51tadw21tp57bdfd)=2ns=7_o4tnmy
-      - DEBUG=True
-      - ALLOWED_HOSTS=*
-
-      - SEQ_LOG_LEVEL=INFO
-      - FILE_LOG_LEVEL=INFO
-      - CONSOLE_LOG_LEVEL=INFO
-      - LOG_HANDLERS='console', 'file', 'seq'
-      
-      - SUPERUSER_USERNAME=admin
-      - SUPERUSER_PASSWORD=!@#QWE123qwe
-
-      - EMAIL_HOST=mail.example.come
-      - EMAIL_PORT=465
-      - EMAIL_HOST_USER=john.doe@example.com
-      - EMAIL_HOST_PASSWORD=password
-      - EMAIL_DEFAULT_FROM_EMAIL=john.doe@example.com
-      - EMAIL_USE_SSL=True
-      - EMAIL_USE_TLS=False
-
-      - DB_ENGINE=django.db.backends.postgresql
-      - DB_NAME=postgres
-      - DB_USER=sa
-      - DB_PASS=!@#QWE123qwe
-      - DB_HOST=db
-      - DB_PORT=5432
+    env_file:
+      - ../envs/stage/backend/.env
 
   worker:
     build:
@@ -78,7 +55,7 @@ services:
     command: celery -A core worker --loglevel=info
     restart: always
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - backend
   
@@ -90,7 +67,7 @@ services:
     command: celery -A core beat --loglevel=info
     restart: always
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - worker
 

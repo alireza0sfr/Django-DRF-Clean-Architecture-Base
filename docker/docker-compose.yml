@@ -28,6 +28,8 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../envs/dev/db/.env
 
   backend:
     build:
@@ -37,7 +39,7 @@ services:
     restart: always
     command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - redis
       - seq
@@ -45,25 +47,9 @@ services:
     ports:
       - "8000:8000"
       - "5678:5678"
-    environment:
-      - SECRET_KEY=test
-      - DEBUG=True
-      - ALLOWED_HOSTS=0.0.0.0
+    env_file:
+      - ../envs/dev/backend/.env
 
-      - SEQ_LOG_LEVEL=INFO
-      - FILE_LOG_LEVEL=INFO
-      - CONSOLE_LOG_LEVEL=INFO
-      - LOG_HANDLERS='console', 'file', 'seq'
-      
-      - SUPERUSER_USERNAME=admin
-      - SUPERUSER_PASSWORD=!@#QWE123qwe
-
-      - DB_ENGINE=django.db.backends.postgresql
-      - DB_NAME=postgres
-      - DB_USER=sa
-      - DB_PASS=!@#QWE123qwe
-      - DB_HOST=db
-      - DB_PORT=5432
 
   worker:
     build:
@@ -73,7 +59,7 @@ services:
     command: celery -A core worker --loglevel=info
     restart: always
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - backend
   
@@ -85,7 +71,7 @@ services:
     command: celery -A core beat --loglevel=info
     restart: always
     volumes:
-      - ./src:/app
+      - ../src:/app
     depends_on:
       - worker
 
@@ -94,13 +80,13 @@ services:
     ports:
      - "8089:8089"
     volumes:
-      - ./src/infrastructure/locust:/mnt/locust
+      - ../src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
   
   locustworker:
     image: locustio/locust
     volumes:
-      - ./src/infrastructure/locust:/mnt/locust
+      - ../src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --worker --master-host master
 
   smtp4dev:
