@@ -42,10 +42,11 @@ INSTALLED_APPS = [
     
     # Third Party
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_spectacular',
     'corsheaders',
     'django_celery_beat',
-
+    'dj_rest_auth'
     # Apps
 
 ]

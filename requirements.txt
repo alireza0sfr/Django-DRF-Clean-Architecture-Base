@@ -10,6 +10,9 @@ psycopg[binary,pool]
 djangorestframework
 djangorestframework-camel-case
 
+# Authentication
+dj-rest-auth
+
 # Third Party
 python-decouple
 markdown

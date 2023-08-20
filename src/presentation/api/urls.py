@@ -23,7 +23,7 @@ base_urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-    # path('rest-auth/', include('rest_framework.urls')),
+    path('authentication/', include('dj_rest_auth.urls'))
 ]
 
 development_urls = []
