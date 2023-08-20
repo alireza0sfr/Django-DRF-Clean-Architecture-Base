@@ -36,7 +36,7 @@ services:
       dockerfile: docker/Dockerfile
     container_name: backend
     restart: always
-    command: sh -c "python3 manage.py makemigrations --noinput && python3 manage.py migrate --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
+    command: sh -c "python3 manage.py migrate --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
     volumes:
       - ../src:/app
     depends_on:
