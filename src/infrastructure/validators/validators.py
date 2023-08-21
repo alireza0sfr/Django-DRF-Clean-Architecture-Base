@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.appplication.interfaces.validators import BaseValidator
+from src.appplication.interfaces.validators import IValidator
 
 
 class Validator:
@@ -14,7 +14,7 @@ class Validator:
 			
 			for index, v in enumerate(value):
 
-				validator = v if isinstance(v, BaseValidator) else v.value()
+				validator = v if isinstance(v, IValidator) else v.value()
 				validated = validator.validate(prop)
 
 				if not validated:
@@ -26,7 +26,7 @@ class Validator:
 		return errors
 
 
-class VNotEmpty(BaseValidator):
+class VNotEmpty(IValidator):
 
 	@staticmethod
 	def validate(value):
@@ -37,7 +37,7 @@ class VNotEmpty(BaseValidator):
 		return f'{value} is required!'
 
 
-class VCustom(BaseValidator):
+class VCustom(IValidator):
 
 	def __init__(self, validator, mgenerator) -> None:
 		self.validator = validator
@@ -50,7 +50,7 @@ class VCustom(BaseValidator):
 		return self.mgenerator(value)
 
 
-class VEmail(BaseValidator):
+class VEmail(IValidator):
 	
 	def validate(self, value):
 		import re
