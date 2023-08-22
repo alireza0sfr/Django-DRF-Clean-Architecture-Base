@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from uuid import UUID
 
 from appplication.interfaces.generic_repository import IGenericRepository
+from infrastructure.exceptions.exceptions import EntityNotFoundException
 
 
 class GenericRepository(IGenericRepository):
@@ -18,7 +19,7 @@ class GenericRepository(IGenericRepository):
         try:
             return await self.queryset.aget(expression)
         except self.model.DoesNotExist:
-            raise ObjectDoesNotExist('Entity Not Found!')
+            raise EntityNotFoundException('Entity Not Found!')
 
     async def get_by_id_async(self, id: UUID) -> QuerySet:
         return await self.get_async(Q(id=id))
@@ -42,7 +43,8 @@ class GenericRepository(IGenericRepository):
         return await self.get_async(expression).aupdate()
 
     async def create_or_update_async(self, entity: QuerySet) -> QuerySet:
-        if self.get_by_id_async(entity.id):
+        try:
+            self.get_by_id_async(id=entity.id)
             return self.update_async(entity)
-        else:
+        except self.model.DoesNotExist:
             return self.create_async(entity)
