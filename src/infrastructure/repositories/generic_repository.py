@@ -1,5 +1,4 @@
 from django.db.models import Model, Q, QuerySet
-from django.core.exceptions import ObjectDoesNotExist
 from uuid import UUID
 
 from appplication.interfaces.generic_repository import IGenericRepository
@@ -37,14 +36,26 @@ class GenericRepository(IGenericRepository):
         return await self.model.objects.abulk_create(entities)
 
     async def delete_async(self, expression: Q) -> QuerySet:
-        return await self.get_async(expression).adelete()
 
-    async def update_async(self, expression: Q) -> QuerySet:
-        return await self.get_async(expression).aupdate()
+        try:
+            return await self.get_async(expression).adelete()
+        except self.model.RestrictedError:
+            raise EntityNotFoundException('Entity Deletion Restricted!')
+        except self.model.ProtectedError:
+            raise EntityNotFoundException('Entity Deletion Protected!')
+
+    async def update_async(self, entity: QuerySet) -> QuerySet:
+
+        try:
+            return await entity.aupdate()
+        except self.model.DoesNotExist:
+            raise EntityNotFoundException('Entity Not Found!')
 
     async def create_or_update_async(self, entity: QuerySet) -> QuerySet:
         try:
             self.get_by_id_async(id=entity.id)
             return self.update_async(entity)
         except self.model.DoesNotExist:
+            return self.create_async(entity)
+        except EntityNotFoundException:
             return self.create_async(entity)
