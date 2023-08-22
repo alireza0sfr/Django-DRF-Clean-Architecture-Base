@@ -155,7 +155,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_RENDERER_CLASSES': (
-        'presentation.common.renderers.CustomJSONRenderer',
+        'presentation.renderers.camelize_renderer.CamelizeRenderer',
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         # Any other renders
