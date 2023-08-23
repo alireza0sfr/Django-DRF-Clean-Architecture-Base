@@ -224,7 +224,7 @@ LOGGING = {
         'file': {
             "level": config('FILE_LOG_LEVEL'),
             'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, f'django-{datetime.now():%Y-%m-%d}.log'),
+            'filename': os.path.join(LOGS_DIR, f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log'),
             'formatter': 'verbose',
         },
         'seq': {
