@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from decouple import config, Csv
 from datetime import timedelta
+import os
+from datetime import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "infrastructure.middlewares.custom_exception_middleware.CustomExceptionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -155,7 +158,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_RENDERER_CLASSES': (
-        'presentation.common.renderers.CustomJSONRenderer',
+        'presentation.renderers.camelize_renderer.CamelizeRenderer',
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         # Any other renders
@@ -174,6 +177,8 @@ REST_FRAMEWORK = {
     },
 
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'EXCEPTION_HANDLER': 'infrastructure.exceptions.custom_handlers.custom_exception_handler'
 }
 
 
@@ -197,6 +202,11 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Logging
+
+# Create the "logs" directory if it doesn't exist
+LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -215,7 +225,7 @@ LOGGING = {
         'file': {
             "level": config('FILE_LOG_LEVEL'),
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'django.log',
+            'filename': os.path.join(LOGS_DIR, f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log'),
             'formatter': 'verbose',
         },
         'seq': {

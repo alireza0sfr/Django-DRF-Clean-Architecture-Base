@@ -20,13 +20,15 @@ from presentation.api.router import router
 
 base_urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1.0/', include('presentation.api.v1.urls'))
+]
+
+development_urls = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-    path('authentication/', include('dj_rest_auth.urls'))
 ]
 
-development_urls = []
 production_urls = []
 
 

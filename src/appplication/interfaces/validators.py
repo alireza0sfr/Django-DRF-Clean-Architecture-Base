@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-class BaseValidator(ABC):
+class IValidator(ABC):
 
     @abstractmethod
     def validate(self, value):
