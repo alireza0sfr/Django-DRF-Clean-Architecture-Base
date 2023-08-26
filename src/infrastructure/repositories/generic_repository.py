@@ -2,7 +2,7 @@ from django.db.models import Model, Q, QuerySet
 from uuid import UUID
 
 from appplication.interfaces.generic_repository import IGenericRepository
-from infrastructure.exceptions.exceptions import EntityNotFoundException
+from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, EntityDeleteRestrictedException
 
 
 class GenericRepository(IGenericRepository):
@@ -40,9 +40,9 @@ class GenericRepository(IGenericRepository):
         try:
             return await self.get_async(expression).adelete()
         except self.model.RestrictedError:
-            raise EntityNotFoundException('Entity Deletion Restricted!')
+            raise EntityDeleteRestrictedException('Entity Deletion Restricted!')
         except self.model.ProtectedError:
-            raise EntityNotFoundException('Entity Deletion Protected!')
+            raise EntityDeleteProtectedException('Entity Deletion Protected!')
 
     async def update_async(self, entity: QuerySet) -> QuerySet:
 
