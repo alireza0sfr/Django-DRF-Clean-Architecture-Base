@@ -3,7 +3,7 @@ from infrastructure.exceptions.exceptions import BaseCustomException
 from rest_framework.response import Response
 
 
-class CustomExceptionMiddleware:
+class UnhandledExceptionsMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
