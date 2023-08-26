@@ -18,7 +18,7 @@ class GenericRepository(IGenericRepository):
         try:
             return await self.queryset.aget(expression)
         except self.model.DoesNotExist:
-            raise EntityNotFoundException('Entity Not Found!')
+            raise EntityNotFoundException()
 
     async def get_by_id_async(self, id: UUID) -> QuerySet:
         return await self.get_async(Q(id=id))
@@ -40,16 +40,16 @@ class GenericRepository(IGenericRepository):
         try:
             return await self.get_async(expression).adelete()
         except self.model.RestrictedError:
-            raise EntityDeleteRestrictedException('Entity Deletion Restricted!')
+            raise EntityDeleteRestrictedException()
         except self.model.ProtectedError:
-            raise EntityDeleteProtectedException('Entity Deletion Protected!')
+            raise EntityDeleteProtectedException()
 
     async def update_async(self, entity: QuerySet) -> QuerySet:
 
         try:
             return await entity.aupdate()
         except self.model.DoesNotExist:
-            raise EntityNotFoundException('Entity Not Found!')
+            raise EntityNotFoundException()
 
     async def create_or_update_async(self, entity: QuerySet) -> QuerySet:
         try:

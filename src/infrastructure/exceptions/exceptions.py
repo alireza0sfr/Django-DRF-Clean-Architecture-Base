@@ -17,15 +17,20 @@ class BaseCustomException(APIException):
 
 
 class EntityNotFoundException(BaseCustomException):
-  def __init__(self, message):
-    super().__init__(message, status.HTTP_404_NOT_FOUND)
+    def __init__(self, message = 'Entity Not Found!'):
+        super().__init__(message, status.HTTP_404_NOT_FOUND)
 
 
 class EntityDeleteRestrictedException(BaseCustomException):
-  def __init__(self, message):
-    super().__init__(message, status.HTTP_409_CONFLICT)
+    def __init__(self, message = 'Entity Deletion Restricted!'):
+        super().__init__(message, status.HTTP_409_CONFLICT)
 
 
 class EntityDeleteProtectedException(BaseCustomException):
-  def __init__(self, message):
-    super().__init__(message, status.HTTP_409_CONFLICT)
+    def __init__(self, message = 'Entity Deletion Protected!'):
+        super().__init__(message, status.HTTP_409_CONFLICT)
+
+
+class CaptchaTokenInvalidException(BaseCustomException):
+    def __init__(self, message = 'Captcha Token is Invalid!'):
+        super().__init__(message, status.HTTP_403_FORBIDDEN)
