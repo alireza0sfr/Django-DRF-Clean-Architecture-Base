@@ -30,6 +30,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - ../envs/dev/db/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   backend:
     build:
@@ -41,9 +46,12 @@ services:
     volumes:
       - ../src:/app
     depends_on:
-      - redis
-      - seq
-      - db
+      db:
+        condition: service_healthy
+      seq:
+        condition: service_started
+      redis:
+        condition: service_started
     ports:
       - "8000:8000"
       - "5678:5678"
