@@ -19,11 +19,11 @@ from django.conf import settings
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from presentation.api.views import TestViewSet
 
-from presentation.api.router import router
+BASENAME = 'api'
 
-base_urlpatterns = [
+urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1.0/', include('presentation.api.v1.urls'))
+    path(f'{BASENAME}/v1.0/', include('presentation.api.v1.urls'))
 ]
 
 development_urls = [
@@ -33,9 +33,6 @@ development_urls = [
     path('test/', TestViewSet.as_view({'get': 'retrieve'}, name='test'))
 ]
 production_urls = []
-
-
-urlpatterns = base_urlpatterns + router.urls
 
 if settings.DEBUG:
     urlpatterns += development_urls
