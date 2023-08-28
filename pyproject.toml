@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "django-drf-clean-architecture-base"
+version = "1.0.0"
+description = ""
+authors = ["Alireza Safari <alireza.safaree@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "4.2.3"
+asgiref = "^3.7.2"
+sqlparse = "^0.4.4"
+psycopg2 = "^2.9.7"
+djangorestframework = "^3.14.0"
+djangorestframework-camel-case = "^1.4.2"
+dj-rest-auth = "^4.0.1"
+python-decouple = "^3.8"
+Markdown = "^3.4.4"
+django-filter = "^23.2"
+drf-spectacular = "^0.26.4"
+django-cors-headers = "^4.2.0"
+seqlog = "^0.3.29"
+django-redis = "^5.3.0"
+celery = "^5.3.1"
+django-celery-beat = "^2.5.0"
+gunicorn = "^21.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-django = "^4.5.2"
+pytest-cov = "^4.1.0"
+factory-boy = "^3.3.0"
+black = "^23.7.0"
+flake8 = "^6.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
