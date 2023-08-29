@@ -10,33 +10,33 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_async(self, expression: Q) -> QuerySet:
+    def get(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
-    async def get_by_id_async(self, id: UUID) -> QuerySet:
+    def get_by_id(self, id: UUID) -> QuerySet:
         pass
 
     @abstractmethod
-    async def get_all_async(self, expression: Q) -> QuerySet:
+    def get_all(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
-    async def create_async(self, entity: Model) -> QuerySet:
+    def create(self, entity: Model) -> QuerySet:
         pass
 
     @abstractmethod
-    async def bulk_create_async(self, entities: Model) -> QuerySet:
+    def bulk_create(self, entities: Model) -> QuerySet:
         pass
 
     @abstractmethod
-    async def delete_async(self, expression: Q) -> QuerySet:
+    def delete(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
-    async def update_async(self, expression: Q) -> QuerySet:
+    def update(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
-    async def create_or_update_async(self, entity: QuerySet) -> QuerySet:
+    def create_or_update(self, entity: QuerySet) -> QuerySet:
         pass
