@@ -1,6 +1,7 @@
-from django.db.models import Model, Q, QuerySet
-from uuid import UUID
 from abc import ABC, abstractmethod
+from uuid import UUID
+
+from django.db.models import Q, QuerySet
 
 
 class IGenericRepository(ABC):
@@ -22,11 +23,11 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def create(self, entity: Model) -> QuerySet:
+    def create(self, entity: QuerySet) -> QuerySet:
         pass
 
     @abstractmethod
-    def bulk_create(self, entities: Model) -> QuerySet:
+    def bulk_create(self, entities: list[QuerySet]) -> QuerySet:
         pass
 
     @abstractmethod

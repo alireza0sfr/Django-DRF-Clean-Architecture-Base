@@ -1,15 +1,19 @@
-from django.db.models import Model, Q, QuerySet
 from uuid import UUID
 
+from django.db.models import Q, QuerySet
+
 from appplication.interfaces.generic_repository import IGenericRepository
-from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, EntityDeleteRestrictedException
+from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, \
+    EntityDeleteRestrictedException
 
 
 class GenericRepository(IGenericRepository):
+    model = None
+    queryset = None
 
-    def __init__(self, model: Model):
-        self.model = model
-        self.queryset = self.get_queryset()
+    def __init__(self):
+        if self.queryset is None:
+            self.queryset = self.get_queryset()
 
     def get_queryset(self) -> QuerySet:
         return self.model.objects.all()
@@ -29,10 +33,10 @@ class GenericRepository(IGenericRepository):
         else:
             return self.queryset.filter(expression)
 
-    def create(self, entity: Model) -> QuerySet:
-        return entity.save()
+    def create(self, entity: QuerySet) -> QuerySet:
+        return entity.create()
 
-    def bulk_create(self, entities: Model) -> QuerySet:
+    def bulk_create(self, entities: list[QuerySet]) -> QuerySet:
         return self.model.objects.abulk_create(entities)
 
     def delete(self, expression: Q) -> QuerySet:
@@ -53,7 +57,7 @@ class GenericRepository(IGenericRepository):
 
     def create_or_update(self, entity: QuerySet) -> QuerySet:
         try:
-            self.get_by_id(id=entity.id)
+            self.get_by_id(id=entity.get('id'))
             return self.update(entity)
         except self.model.DoesNotExist:
             return self.create(entity)

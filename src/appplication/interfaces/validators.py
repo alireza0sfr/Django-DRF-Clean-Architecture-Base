@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 class IValidator(ABC):
 
+    @staticmethod
     @abstractmethod
-    def validate(self, value):
+    def validate(value):
         pass
 
+    @staticmethod
     @abstractmethod
-    def message_generator(self, value):
+    def message_generator(value):
         pass

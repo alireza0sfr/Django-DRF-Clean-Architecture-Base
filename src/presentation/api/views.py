@@ -1,7 +1,9 @@
-from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+
 
 class TestViewSet(ViewSet):
 
-    def retrieve(self, request):
+    @staticmethod
+    def retrieve(self):
         return Response(data={'data': 'ok'})

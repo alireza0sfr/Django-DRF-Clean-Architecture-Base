@@ -11,26 +11,6 @@ class BasePermission(permissions.BasePermission):
         return bool(request.user and request.user.is_superuser)
 
 
-class PermissionPolicyMixin:
-    def check_permissions(self, request):
-        try:
-            # This line is heavily inspired from `APIView.dispatch`.
-            # It returns the method associated with an endpoint.
-            handler = getattr(self, request.method.lower())
-        except AttributeError:
-            handler = None
-
-        if (
-            handler
-            and self.permission_classes_per_method
-            and self.permission_classes_per_method.get(handler.__name__)
-        ):
-            self.permission_classes = self.permission_classes_per_method.get(
-                handler.__name__)
-
-        super().check_permissions(request)
-
-
 class IsSuperUser(BasePermission):
     """Allows access only to superusers."""
 
@@ -39,7 +19,7 @@ class IsSuperUser(BasePermission):
         return parent_access or bool(request.user and request.user.is_superuser)
 
 
-class isOwnerOrReadonly(BasePermission):
+class IsOwnerOrReadonly(BasePermission):
 
     def has_permission(self, request, view):
         return True

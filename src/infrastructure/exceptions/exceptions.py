@@ -6,10 +6,12 @@ class BaseCustomException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     success = False
     detail = ''
-    erros = []
+    errors = []
 
-    def __init__(self, detail, code, errors):
+    def __init__(self, detail, code, errors=None):
         super().__init__(detail, code)
+        if errors is None:
+            errors = []
         self.status_code = code
         self.success = False
         self.detail = detail
