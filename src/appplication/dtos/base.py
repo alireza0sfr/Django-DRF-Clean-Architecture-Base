@@ -1,11 +1,9 @@
-from uuid import uuid4 as GUID
-
+from uuid import UUID
 from attrs import define
-from django.utils import timezone
+from datetime import datetime
 
-
-@define(frozen=True)
+@define
 class BaseDto:
-    created_date: timezone
-    updated_date: timezone
-    id: GUID
+    created_date: datetime
+    updated_date: datetime
+    id: UUID

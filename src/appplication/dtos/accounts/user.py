@@ -1,8 +1,7 @@
 from attrs import define
-from django.utils import timezone
+from datetime import datetime
 
 from appplication.dtos.base import BaseDto
-
 
 @define
 class UserDto(BaseDto):
@@ -10,11 +9,11 @@ class UserDto(BaseDto):
     password: str
     email: str
 
-    last_login: timezone
-    date_joined: timezone
+    last_login: datetime
+    date_joined: datetime
 
     is_active: bool
     is_verified: bool
     is_superuser: bool
     is_staff: bool
-    is_anonymous: bool
+    is_hidden: bool
