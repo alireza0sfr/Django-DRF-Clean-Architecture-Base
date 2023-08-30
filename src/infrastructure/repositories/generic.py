@@ -2,7 +2,7 @@ from uuid import UUID
 
 from django.db.models import Q, QuerySet
 
-from appplication.interfaces.generic_repository import IGenericRepository
+from appplication.interfaces.repositories.generic import IGenericRepository
 from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, \
     EntityDeleteRestrictedException
 
