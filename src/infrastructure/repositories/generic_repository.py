@@ -21,7 +21,7 @@ class GenericRepository(IGenericRepository):
             raise EntityNotFoundException()
 
     def get_by_id(self, id: UUID) -> QuerySet:
-        return self.get_sync(Q(id=id))
+        return self.get(Q(id=id))
 
     def get_all(self, expression: Q) -> QuerySet:
         if not expression:
