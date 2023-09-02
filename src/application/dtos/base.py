@@ -1,6 +1,8 @@
-from uuid import UUID
-from attrs import define
 from datetime import datetime
+from uuid import UUID
+
+from attrs import define
+
 
 @define
 class BaseDto:

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.appplication.interfaces.validators import IValidator
+from src.application.interfaces.validators import IValidator
 
 
 class Validator:

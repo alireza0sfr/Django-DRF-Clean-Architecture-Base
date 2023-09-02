@@ -1,7 +1,9 @@
-from attrs import define
 from datetime import datetime
 
-from appplication.dtos.base import BaseDto
+from attrs import define
+
+from application.dtos.base import BaseDto
+
 
 @define
 class UserDto(BaseDto):

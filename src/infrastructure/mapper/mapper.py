@@ -1,6 +1,7 @@
 from dataclasses import asdict
 
-from src.appplication.interfaces.mapper import IMapper
+from src.application.interfaces.mapper import IMapper
+
 
 class Mapper(IMapper):
     
