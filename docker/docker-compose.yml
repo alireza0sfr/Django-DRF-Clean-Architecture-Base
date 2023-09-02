@@ -7,7 +7,7 @@ services:
     image: redis
     restart: always
     ports:
-    - "6379:6379"
+      - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
 
   seq:
@@ -30,8 +30,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - ../envs/dev/db/.env
+    ports:
+      - ${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -90,7 +92,7 @@ services:
   locust:
     image: locustio/locust
     ports:
-     - "8089:8089"
+      - "8089:8089"
     volumes:
       - ../src/infrastructure/locust:/mnt/locust
     command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
@@ -118,5 +120,5 @@ services:
 
 volumes:
   seq-data:
-#  smtp4dev-data:
+  #  smtp4dev-data:
   postgres_data:
