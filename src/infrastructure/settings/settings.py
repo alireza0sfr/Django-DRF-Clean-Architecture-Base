@@ -68,8 +68,9 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "infrastructure.middlewares.unhandled_exceptions.UnhandledExceptionsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "infrastructure.middlewares.last_used_ip.LastUsedIpMiddleware",
+    "infrastructure.middlewares.unhandled_exceptions.UnhandledExceptionsMiddleware",
 ]
 
 ROOT_URLCONF = "presentation.api.urls"

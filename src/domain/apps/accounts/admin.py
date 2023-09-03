@@ -8,7 +8,8 @@ User = get_user_model()
 class CustomUserAdmin(UserAdmin):
     model = User
     list_display = (
-        'id', 'username', 'email', 'last_login', 'date_joined', 'is_staff', 'is_active', 'is_superuser', 'is_hidden',
+        'id', 'username', 'email', 'last_login', 'date_joined', 'last_used_ip', 'is_staff', 'is_active', 'is_superuser',
+        'is_hidden',
         'is_verified')
     list_filter = list_display
     search_fields = ('id', 'email', 'username')
@@ -17,7 +18,7 @@ class CustomUserAdmin(UserAdmin):
         ('Authentication', {'fields': ('username', 'email', 'password')}),
         ('Permission', {'fields': ('is_staff', 'is_active', 'is_superuser', 'is_hidden', 'is_verified')}),
         ('Group Permissions', {'fields': ('groups', 'user_permissions')}),
-        ('Metadata', {'fields': ('last_login', 'date_joined')}),
+        ('Metadata', {'fields': ('last_login', 'date_joined', 'last_used_ip')}),
 
     )
     add_fieldsets = (

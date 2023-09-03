@@ -26,6 +26,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     }, )
 
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    last_used_ip = models.GenericIPAddressField(_("last used ip"), blank=True, null=True)
 
     objects = UserManager()
 
