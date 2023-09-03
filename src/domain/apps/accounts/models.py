@@ -1,13 +1,14 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from domain.models.base import BaseModel
+from domain.apps.accounts.managers import UserManager
+from domain.base import BaseModel
 
 
-class User(BaseModel, AbstractBaseUser):
+class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
         _("username"),
         max_length=150,
@@ -20,9 +21,13 @@ class User(BaseModel, AbstractBaseUser):
             "unique": _("A user with that username already exists."),
         },
     )
-    email = models.EmailField(_("email address"), blank=True)
+    email = models.EmailField(_("email address"), blank=True, unique=True, error_messages={
+        "unique": _("A user with that email already exists."),
+    }, )
 
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+
+    objects = UserManager()
 
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
@@ -30,6 +35,9 @@ class User(BaseModel, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
 
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return self.username

@@ -10,15 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from pathlib import Path
-from decouple import config, Csv
-from datetime import timedelta
-import os
 from datetime import datetime
+from datetime import timedelta
+from pathlib import Path
+
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -31,7 +30,6 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,17 +39,26 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
+
     # Third Party
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
     'corsheaders',
     'django_celery_beat',
-    'dj_rest_auth'
-    # Apps
+    'dj_rest_auth',
 
+    # Apps
+    ## Django apps will be auto registered!
 ]
+
+APPS_DIRECTORY = 'domain/apps'
+
+for app_path in (BASE_DIR / APPS_DIRECTORY).iterdir():
+    # Check if it's a directory and contains an 'apps.py' file
+    if app_path.is_dir() and (app_path / 'apps.py').exists():
+        app = app_path.relative_to(BASE_DIR).as_posix().replace('/', '.')
+        INSTALLED_APPS.append(app)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -85,7 +92,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "infrastructure.server.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -99,7 +105,6 @@ DATABASES = {
         "PORT": config('DB_PORT', cast=int),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -119,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -130,7 +134,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -181,12 +184,14 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'infrastructure.exceptions.custom_handlers.custom_exception_handler'
 }
 
-
 # Jwt
 # SIMPLE_JWT = {
 #     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
 #     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 # }
+
+# Authentication
+AUTH_USER_MODEL = 'accounts.User'
 
 # DRF spectacular
 SPECTACULAR_SETTINGS = {
@@ -225,7 +230,7 @@ LOGGING = {
         'file': {
             "level": config('FILE_LOG_LEVEL'),
             'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log'),
+            'filename': Path(LOGS_DIR) / f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log',
             'formatter': 'verbose',
         },
         'seq': {
@@ -290,7 +295,7 @@ CACHES = {
 }
 
 # Email Configurations for production and development
-if DEBUG:    
+if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_USE_TLS = False
     EMAIL_HOST = "smtp4dev"
