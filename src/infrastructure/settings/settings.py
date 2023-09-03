@@ -69,7 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "infrastructure.middlewares.last_used_ip.LastUsedIpMiddleware",
+    "infrastructure.middlewares.ban.BanMiddleware",
     "infrastructure.middlewares.unhandled_exceptions.UnhandledExceptionsMiddleware",
 ]
 

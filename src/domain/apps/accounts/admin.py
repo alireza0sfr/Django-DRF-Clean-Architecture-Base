@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from .models import UserBan, IPBan
+
 User = get_user_model()
 
 
@@ -42,4 +44,22 @@ class CustomUserAdmin(UserAdmin):
         return super().save_form(request, form, change)
 
 
+class CustomUserBanAdmin(admin.ModelAdmin):
+    model = UserBan
+    list_display = ('id', 'user', 'reason', 'description', 'until', 'created_date')
+    list_filter = list_display
+    search_fields = list_display
+    ordering = list_display
+
+
+class CustomIPBanAdmin(admin.ModelAdmin):
+    model = IPBan
+    list_display = ('id', 'ip', 'reason', 'description', 'until', 'created_date')
+    list_filter = list_display
+    search_fields = list_display
+    ordering = list_display
+
+
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(UserBan, CustomUserBanAdmin)
+admin.site.register(IPBan, CustomIPBanAdmin)

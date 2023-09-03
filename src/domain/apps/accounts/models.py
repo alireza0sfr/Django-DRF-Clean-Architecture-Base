@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from domain.apps.accounts.managers import UserManager
-from domain.base import BaseModel
+from domain.base import BaseModel, BaseBanModel
 
 
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
@@ -42,3 +42,17 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+
+class UserBan(BaseBanModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.__str__()
+
+
+class IPBan(BaseBanModel):
+    ip = models.GenericIPAddressField(unique=True, unpack_ipv4=True)
+
+    def __str__(self):
+        return self.ip
