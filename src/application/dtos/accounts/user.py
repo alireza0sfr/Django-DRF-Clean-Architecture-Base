@@ -2,11 +2,9 @@ from datetime import datetime
 
 from attrs import define
 
-from application.dtos.base import BaseDto
-
 
 @define
-class UserDto(BaseDto):
+class UserDto:
     username: str
     password: str
     email: str
