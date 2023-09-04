@@ -1,14 +1,16 @@
 from uuid import UUID
 
-from django.db.models import Q, QuerySet
+from django.db.models import Q, QuerySet, Model
 
 from application.interfaces.repositories.generic import IGenericRepository
 from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, \
     EntityDeleteRestrictedException
+from infrastructure.mapper.mapper import Mapper
 
 
 class GenericRepository(IGenericRepository):
     model = None
+    mapper = Mapper()
     queryset = None
 
     def __init__(self):
@@ -38,10 +40,10 @@ class GenericRepository(IGenericRepository):
         else:
             return self.queryset.filter(expression)
 
-    def create(self, entity: QuerySet) -> QuerySet:
-        return entity.create()
+    def create(self, entity: Model) -> QuerySet:
+        return entity.save(force_insert=True)
 
-    def bulk_create(self, entities: QuerySet) -> QuerySet:
+    def bulk_create(self, entities: list[Model]) -> QuerySet:
         return self.model.objects.abulk_create(entities)
 
     def delete(self, expression: Q) -> QuerySet:
@@ -53,16 +55,16 @@ class GenericRepository(IGenericRepository):
         except self.model.ProtectedError:
             raise EntityDeleteProtectedException()
 
-    def update(self, entity: QuerySet) -> QuerySet:
+    def update(self, entity: Model) -> QuerySet:
 
         try:
-            return entity.update()
+            return entity.save(force_update=True)
         except self.model.DoesNotExist:
             raise EntityNotFoundException()
 
-    def create_or_update(self, entity: QuerySet) -> QuerySet:
+    def create_or_update(self, entity: Model) -> QuerySet:
         try:
-            self.get_by_id(id=entity.get('id'))
+            self.get_by_id(id=entity.pk)
             return self.update(entity)
         except self.model.DoesNotExist:
             return self.create(entity)
