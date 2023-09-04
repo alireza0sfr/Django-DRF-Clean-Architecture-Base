@@ -1,6 +1,7 @@
 from uuid import uuid4 as GUID
 
 from django.db import models
+from django.utils import timezone
 
 from .enums.accounts.enum import BanReasons
 
@@ -19,6 +20,10 @@ class BaseBanModel(BaseModel):
     until = models.DateTimeField()
     reason = models.CharField(default=BanReasons.ABUSIVE.value, choices=BanReasons.choices, max_length=20)
     description = models.TextField(max_length=255, blank=True, null=True)
+
+    @property
+    def is_active(self):
+        return self.until >= timezone.now()
 
     class Meta:
         abstract = True

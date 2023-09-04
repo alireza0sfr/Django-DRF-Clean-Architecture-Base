@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.utils import timezone
 
 from .models import UserBan, IPBan
 
@@ -44,20 +45,49 @@ class CustomUserAdmin(UserAdmin):
         return super().save_form(request, form, change)
 
 
+class IsActiveFilter(admin.SimpleListFilter):
+    title = 'Is Active'
+    parameter_name = 'is_active'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('True', True),
+            ('False', False),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'True':
+            return queryset.filter(until__gt=timezone.now())
+        if self.value() == 'False':
+            return queryset.filter(until__lte=timezone.now())
+
+
 class CustomUserBanAdmin(admin.ModelAdmin):
     model = UserBan
-    list_display = ('id', 'user', 'reason', 'description', 'until', 'created_date')
-    list_filter = list_display
+    list_display = ('id', 'user', 'reason', 'active', 'description', 'until', 'created_date')
     search_fields = list_display
-    ordering = list_display
+    list_filter = ('user__username', 'reason', IsActiveFilter)
+    ordering = ('id', 'user', 'reason', 'until', 'created_date')
+
+    @admin.display(empty_value=False)
+    def active(self, obj):
+        return obj.is_active
+
+    active.boolean = True  # Display as a boolean (checkbox)
 
 
 class CustomIPBanAdmin(admin.ModelAdmin):
     model = IPBan
-    list_display = ('id', 'ip', 'reason', 'description', 'until', 'created_date')
-    list_filter = list_display
+    list_display = ('id', 'ip', 'reason', 'active', 'description', 'until', 'created_date')
     search_fields = list_display
-    ordering = list_display
+    list_filter = ('ip', 'reason', IsActiveFilter)
+    ordering = ('id', 'reason', 'until', 'created_date')
+
+    @admin.display(empty_value=False)
+    def active(self, obj):
+        return obj.is_active
+
+    active.boolean = True  # Display as a boolean (checkbox)
 
 
 admin.site.register(User, CustomUserAdmin)
