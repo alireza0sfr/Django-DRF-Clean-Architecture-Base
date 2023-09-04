@@ -6,12 +6,10 @@ class BaseCustomException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     success = False
     detail = ''
-    errors = []
+    errors = None
 
     def __init__(self, detail, code, errors=None):
         super().__init__(detail, code)
-        if errors is None:
-            errors = []
         self.status_code = code
         self.success = False
         self.detail = detail
@@ -19,25 +17,25 @@ class BaseCustomException(APIException):
 
 
 class EntityNotFoundException(BaseCustomException):
-    def __init__(self, message='Entity Not Found!'):
-        super().__init__(message, status.HTTP_404_NOT_FOUND)
+    def __init__(self, message='Entity Not Found!', errors=None):
+        super().__init__(message, status.HTTP_404_NOT_FOUND, errors)
 
 
 class EntityDeleteRestrictedException(BaseCustomException):
-    def __init__(self, message='Entity Deletion Restricted!'):
-        super().__init__(message, status.HTTP_409_CONFLICT)
+    def __init__(self, message='Entity Deletion Restricted!', errors=None):
+        super().__init__(message, status.HTTP_409_CONFLICT, errors)
 
 
 class EntityDeleteProtectedException(BaseCustomException):
-    def __init__(self, message='Entity Deletion Protected!'):
-        super().__init__(message, status.HTTP_409_CONFLICT)
+    def __init__(self, message='Entity Deletion Protected!', errors=None):
+        super().__init__(message, status.HTTP_409_CONFLICT, errors)
 
 
 class CaptchaTokenInvalidException(BaseCustomException):
-    def __init__(self, message='Captcha Token is Invalid!'):
-        super().__init__(message, status.HTTP_403_FORBIDDEN)
+    def __init__(self, message='Captcha Token is Invalid!', errors=None):
+        super().__init__(message, status.HTTP_403_FORBIDDEN, errors)
 
 
 class UserBanException(BaseCustomException):
-    def __init__(self, message='User is Banned!'):
-        super().__init__(message, status.HTTP_403_FORBIDDEN)
+    def __init__(self, message='User is Banned!', errors=None):
+        super().__init__(message, status.HTTP_403_FORBIDDEN, errors)

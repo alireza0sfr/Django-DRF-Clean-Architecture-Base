@@ -1,12 +1,15 @@
+from django.db.models import Q
 from django.utils.deprecation import MiddlewareMixin
 
-from domain.apps.accounts.models import UserBan, IPBan
 from infrastructure.exceptions.exceptions import UserBanException
+from infrastructure.repositories.accounts.ban import UserBanRepository, IPBanRepository
 from infrastructure.services.ip import IP
 
 
 class BanMiddleware(MiddlewareMixin):
-    def process_request(self, request):
+
+    @staticmethod
+    def process_request(request):
         assert hasattr(request, "session"), (
             "The Django authentication middleware requires session middleware "
             "to be installed. Edit your MIDDLEWARE_CLASSES setting to insert "
@@ -17,12 +20,29 @@ class BanMiddleware(MiddlewareMixin):
         ip = IP().get_client_ip(request)
         user = request.user
 
-        if request.user.is_authenticated:
+        if user.is_authenticated:
             user.last_used_ip = ip
             user.save()
 
-            if UserBan.objects.filter(user=user).exists():
-                raise UserBanException()
+            user_ban_repository = UserBanRepository()
+            user_ban = user_ban_repository.filter(Q(user=user))
 
-        if IPBan.objects.filter(ip=ip).exists():
-            raise UserBanException()
+            if user_ban.exists():
+                raise UserBanException(errors=[
+                    {
+                        'until': user_ban[0].until,
+                        'reason': user_ban[0].reason,
+                        'description': user_ban[0].description
+                    }
+                ])
+
+        ip_ban_repository = IPBanRepository()
+        ip_ban = ip_ban_repository.filter(Q(ip=ip))
+        if ip_ban.exists():
+            raise UserBanException(errors=[
+                {
+                    'until': ip_ban[0].until,
+                    'reason': ip_ban[0].reason,
+                    'description': ip_ban[0].description
+                }
+            ])
