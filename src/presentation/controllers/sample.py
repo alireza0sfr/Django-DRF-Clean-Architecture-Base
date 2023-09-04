@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 
-class TestViewSet(ViewSet):
+class SampleViewSet(ViewSet):
 
     @staticmethod
     def retrieve(self):
