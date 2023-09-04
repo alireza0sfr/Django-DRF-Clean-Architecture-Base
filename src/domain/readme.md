@@ -8,4 +8,4 @@
 
 * Entity(Models)
 * Database Enums
-* Apps Definitions(AppConfig)
+* Apps Definitions(app.py, admin.py, managers.py, migrations, etc...)
