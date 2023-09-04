@@ -11,11 +11,15 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def get(self, expression: Q) -> QuerySet:
+    def get(self, expression: Q, silent=False) -> QuerySet:
         pass
 
     @abstractmethod
-    def get_by_id(self, id: UUID) -> QuerySet:
+    def filter(self, expression: Q) -> QuerySet:
+        pass
+
+    @abstractmethod
+    def get_by_id(self, id: UUID, silent=False) -> QuerySet:
         pass
 
     @abstractmethod
@@ -27,7 +31,7 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def bulk_create(self, entities: list[QuerySet]) -> QuerySet:
+    def bulk_create(self, entities: QuerySet) -> QuerySet:
         pass
 
     @abstractmethod

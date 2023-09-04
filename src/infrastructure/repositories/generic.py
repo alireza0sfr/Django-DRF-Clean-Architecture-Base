@@ -18,14 +18,19 @@ class GenericRepository(IGenericRepository):
     def get_queryset(self) -> QuerySet:
         return self.model.objects.all()
 
-    def get(self, expression: Q) -> QuerySet:
+    def get(self, expression: Q, silent=False) -> QuerySet | None:
         try:
             return self.queryset.get(expression)
         except self.model.DoesNotExist:
+            if silent:
+                return None
             raise EntityNotFoundException()
 
-    def get_by_id(self, id: UUID) -> QuerySet:
-        return self.get(Q(id=id))
+    def filter(self, expression: Q) -> QuerySet:
+        return self.queryset.filter(expression)
+
+    def get_by_id(self, id: UUID, silent=False) -> QuerySet | None:
+        return self.get(Q(id=id), silent)
 
     def get_all(self, expression: Q) -> QuerySet:
         if not expression:
@@ -36,7 +41,7 @@ class GenericRepository(IGenericRepository):
     def create(self, entity: QuerySet) -> QuerySet:
         return entity.create()
 
-    def bulk_create(self, entities: list[QuerySet]) -> QuerySet:
+    def bulk_create(self, entities: QuerySet) -> QuerySet:
         return self.model.objects.abulk_create(entities)
 
     def delete(self, expression: Q) -> QuerySet:
