@@ -7,7 +7,6 @@
 ## Sample of contexts
 
 * Dto
-* Mapper
 * Interfaces
 * Pagination
 * Permissions
