@@ -40,25 +40,25 @@ class GenericRepository(IGenericRepository):
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
         return serializer
 
-    def get(self, expression: Q, silent=False, serialize=False) -> QuerySet | None:
+    def get(self, expression: Q, silent=False, serialize=True) -> QuerySet | None:
         try:
             result = self.queryset.get(expression)
-            return result if not serialize else self.serializer_class(result).data
+            return self.serializer_class(result).data if serialize else result
         except self.model.DoesNotExist:
             if silent:
                 return None
             raise EntityNotFoundException()
 
-    def filter(self, expression: Q, serialize=False) -> QuerySet:
+    def filter(self, expression: Q, serialize=True) -> QuerySet:
         result = self.queryset.filter(expression)
-        return result if not serialize else self.serializer_class(result, many=True).data
+        return self.serializer_class(result, many=True).data if serialize else result
 
-    def get_by_id(self, id: UUID, silent=False, serialize=False) -> QuerySet | None:
+    def get_by_id(self, id: UUID, silent=False, serialize=True) -> QuerySet | None:
         return self.get(Q(id=id), silent, serialize)
 
-    def get_all(self, serialize=False) -> QuerySet:
+    def get_all(self, serialize=True) -> QuerySet:
         result = self.queryset
-        return result if not serialize else self.serializer_class(result, many=True)
+        return self.serializer_class(result, many=True) if serialize else result
 
     def create(self, dto: BaseDto) -> QuerySet:
         serializer = self.serialize(dto=dto)
