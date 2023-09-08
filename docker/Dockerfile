@@ -10,6 +10,6 @@ RUN pip3 install --no-cache-dir poetry
 
 COPY pyproject.toml /app/
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi --without dev
 
 COPY ./src /app
