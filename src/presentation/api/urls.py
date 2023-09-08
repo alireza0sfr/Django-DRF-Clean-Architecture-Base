@@ -17,23 +17,28 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from decouple import config
 
 from presentation.controllers.sample import SampleViewSet
+from presentation.controllers.honeypot.views import HoneypotLoginView
 
 BASENAME = 'api'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path(f'{BASENAME}/v1.0/', include('presentation.api.v1.urls'))
 ]
 
 development_urls = [
+    path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     path('test/', SampleViewSet.as_view({'get': 'retrieve'}, name='test'))
 ]
-production_urls = []
+production_urls = [
+    path(f'{config("ADMIN_SECURE_LOGIN_ROUTE")}', admin.site.urls),
+    path("admin/", HoneypotLoginView.as_view(), name="honeypot-login"),
+]
 
 if settings.DEBUG:
     urlpatterns += development_urls
