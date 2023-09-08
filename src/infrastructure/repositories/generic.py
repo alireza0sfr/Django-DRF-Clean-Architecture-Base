@@ -2,6 +2,7 @@ from uuid import UUID
 from rest_framework.serializers import Serializer
 from django.db.models import Q, QuerySet, Model
 from django.core.exceptions import ImproperlyConfigured
+from typing import Callable
 
 from application.interfaces.repositories.generic import IGenericRepository
 from application.dtos.base import BaseDto
@@ -21,10 +22,10 @@ class GenericRepository(IGenericRepository):
         if not self.model:
             raise ImproperlyConfigured('Repositories Should define a Model Property!')
 
-        if not self.queryset or type(self.get_queryset()) != 'function':
+        if not self.queryset and not isinstance(self.get_queryset, Callable):
             raise ImproperlyConfigured('Repositories Should define either a QuerySet Property or get_queryset Method!')
 
-        if not self.serializer_class or not isinstance(self.serializer_class, Serializer):
+        if not self.serializer_class and not isinstance(self.serializer_class, Serializer):
             raise ImproperlyConfigured('Repositories Should define either a serializer_class Property!')
 
         if self.queryset is None:
