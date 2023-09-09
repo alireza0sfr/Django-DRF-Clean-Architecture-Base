@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from django.db.models import Q, QuerySet, Model
+from django.db.models import Q, QuerySet
 from rest_framework.serializers import Serializer
 
 from application.dtos.base import BaseDto
@@ -18,27 +18,27 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def get(self, expression: Q, silent: bool, serialize:bool) -> QuerySet:
+    def get(self, expression: Q, silent: bool) -> QuerySet:
         pass
 
     @abstractmethod
-    def filter(self, expression: Q, serialize:bool) -> QuerySet:
+    def filter(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
-    def get_by_pk(self, pk: UUID, silent: bool, serialize: bool) -> QuerySet:
+    def get_by_pk(self, pk: UUID, silent: bool) -> QuerySet:
         pass
 
     @abstractmethod
-    def get_all(self, serialize: bool) -> QuerySet:
+    def get_all(self) -> QuerySet:
         pass
 
     @abstractmethod
-    def create(self, entity: Model) -> QuerySet:
+    def create(self, entity: BaseDto) -> QuerySet:
         pass
 
     @abstractmethod
-    def bulk_create(self, entities: list[Model]) -> QuerySet:
+    def bulk_create(self, entities: list[BaseDto]) -> QuerySet:
         pass
 
     @abstractmethod
@@ -46,5 +46,5 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, expression: Q) -> QuerySet:
+    def update(self, dto: BaseDto, partial: bool = False) -> QuerySet:
         pass

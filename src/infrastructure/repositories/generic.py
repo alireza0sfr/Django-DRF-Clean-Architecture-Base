@@ -19,7 +19,7 @@ class GenericRepository(IGenericRepository):
     queryset: QuerySet = None
     raise_serializer_exception: bool = True
 
-    def __init__(self, raise_serializer_exception: bool=True):
+    def __init__(self, raise_serializer_exception: bool = True):
 
         if not self.model:
             raise ImproperlyConfigured('Repositories Should define a Model Property!')
@@ -38,30 +38,27 @@ class GenericRepository(IGenericRepository):
     def get_queryset(self) -> QuerySet:
         return self.model.objects.all()
 
-    def serialize(self, dto: BaseDto | list[BaseDto], many: bool=False) -> Serializer:
+    def serialize(self, dto: BaseDto | list[BaseDto], many: bool = False, entity: QuerySet = None, partial: bool = False) -> Serializer:
         serializer = self.serializer_class(data=asdict(dto), many=many)
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
         return serializer
 
-    def get(self, expression: Q, silent=False, serialize=False) -> QuerySet | None:
+    def get(self, expression: Q, silent=False) -> QuerySet | None:
         try:
-            result = self.queryset.get(expression)
-            return self.serializer_class(result).data if serialize else result
+            return self.queryset.get(expression)
         except self.model.DoesNotExist:
             if silent:
                 return None
             raise EntityNotFoundException()
 
     def filter(self, expression: Q, serialize=False) -> QuerySet:
-        result = self.queryset.filter(expression)
-        return self.serializer_class(result, many=True).data if serialize else result
+        return self.queryset.filter(expression)
 
     def get_by_pk(self, pk: UUID, silent=False, serialize=False) -> QuerySet | None:
-        return self.get(Q(pk=pk), silent, serialize)
+        return self.get(Q(pk=pk), silent=silent)
 
-    def get_all(self, serialize=False) -> QuerySet:
-        result = self.queryset
-        return self.serializer_class(result, many=True) if serialize else result
+    def get_all(self) -> QuerySet:
+        return self.queryset
 
     def create(self, dto: BaseDto) -> QuerySet:
         serializer = self.serialize(dto=dto)
@@ -80,9 +77,9 @@ class GenericRepository(IGenericRepository):
         except ProtectedError:
             raise EntityDeleteProtectedException()
 
-    def update(self, entity: Model) -> QuerySet:
-
+    def update(self, dto: BaseDto, partial: bool = False) -> QuerySet:
+        serializer = self.serialize(dto=dto, entity=self.get_by_pk(dto.id), partial=partial)
         try:
-            return entity.save(force_update=True)
+            return serializer.save()
         except self.model.DoesNotExist:
             raise EntityNotFoundException()
