@@ -56,8 +56,8 @@ class GenericRepository(IGenericRepository):
         result = self.queryset.filter(expression)
         return self.serializer_class(result, many=True).data if serialize else result
 
-    def get_by_id(self, id: UUID, silent=False, serialize=False) -> QuerySet | None:
-        return self.get(Q(id=id), silent, serialize)
+    def get_by_pk(self, pk: UUID, silent=False, serialize=False) -> QuerySet | None:
+        return self.get(Q(pk=pk), silent, serialize)
 
     def get_all(self, serialize=False) -> QuerySet:
         result = self.queryset

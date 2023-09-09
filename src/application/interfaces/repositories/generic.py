@@ -6,6 +6,7 @@ from rest_framework.serializers import Serializer
 
 from application.dtos.base import BaseDto
 
+
 class IGenericRepository(ABC):
 
     @abstractmethod
@@ -25,11 +26,11 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, id: UUID, silent: bool, serialize:bool) -> QuerySet:
+    def get_by_pk(self, pk: UUID, silent: bool, serialize: bool) -> QuerySet:
         pass
 
     @abstractmethod
-    def get_all(self, serialize:bool) -> QuerySet:
+    def get_all(self, serialize: bool) -> QuerySet:
         pass
 
     @abstractmethod
