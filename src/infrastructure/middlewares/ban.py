@@ -4,7 +4,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 from infrastructure.exceptions.exceptions import UserBanException
 from infrastructure.repositories.accounts.ban import UserBanRepository, IPBanRepository
-from infrastructure.services.ip import IP
+from infrastructure.services.ip import IPService
 
 
 class BanMiddleware(MiddlewareMixin):
@@ -18,7 +18,7 @@ class BanMiddleware(MiddlewareMixin):
             "'django.contrib.auth.middleware.AuthenticationMiddleware'."
         )
 
-        ip = IP().get_client_ip(request)
+        ip = IPService().get_client_ip(request)
         user = request.user
 
         if user.is_authenticated:

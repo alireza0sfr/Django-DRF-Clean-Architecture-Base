@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from application.dtos.accounts.user import UserDto
 
 
-class IP:
+class IPService:
     @staticmethod
     def get_client_ip(request: HttpRequest):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
