@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-
 from domain.apps.accounts.models import User, UserBan, IPBan
+
 
 class UserModelSerializer(ModelSerializer):
 
@@ -12,13 +12,16 @@ class UserModelSerializer(ModelSerializer):
 
 class UserBanModelSerializer(ModelSerializer):
     user = UserModelSerializer()
+
     class Meta:
         model = UserBan
         fields = ['id', 'user', 'until', 'reason', 'description', 'created_date']
         read_only_fields = ['id', 'created_date']
-        
+
+
 class IPBanModelSerializer(ModelSerializer):
     class Meta:
         model = IPBan
         fields = ['id', 'ip', 'until', 'reason', 'description', 'created_date']
         read_only_fields = ['id', 'created_date']
+

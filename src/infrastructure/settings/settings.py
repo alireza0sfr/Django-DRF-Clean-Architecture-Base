@@ -42,11 +42,10 @@ INSTALLED_APPS = [
 
     # Third Party
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'drf_spectacular',
     'corsheaders',
     'django_celery_beat',
-    'dj_rest_auth',
 
     # Apps
     ## Django apps will be auto registered!

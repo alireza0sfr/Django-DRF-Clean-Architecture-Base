@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from infrastructure.services.ip import IPService
 from presentation.forms.honeypot.forms import LoginForm
 
+
 class HoneypotLoginView(FormView):
     form_class = LoginForm
     template_name = "honeypot/login.html"
