@@ -1,8 +1,10 @@
 from uuid import UUID
 from rest_framework.serializers import Serializer
 from django.db.models import Q, QuerySet, Model
+from django.db.models import ProtectedError, RestrictedError
 from django.core.exceptions import ImproperlyConfigured
 from typing import Callable
+from attr import asdict
 
 from application.interfaces.repositories.generic import IGenericRepository
 from application.dtos.base import BaseDto
@@ -37,11 +39,11 @@ class GenericRepository(IGenericRepository):
         return self.model.objects.all()
 
     def serialize(self, dto: BaseDto | list[BaseDto], many: bool=False) -> Serializer:
-        serializer = self.serializer_class(data=dto, many=many)
+        serializer = self.serializer_class(data=asdict(dto), many=many)
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
         return serializer
 
-    def get(self, expression: Q, silent=False, serialize=True) -> QuerySet | None:
+    def get(self, expression: Q, silent=False, serialize=False) -> QuerySet | None:
         try:
             result = self.queryset.get(expression)
             return self.serializer_class(result).data if serialize else result
@@ -50,14 +52,14 @@ class GenericRepository(IGenericRepository):
                 return None
             raise EntityNotFoundException()
 
-    def filter(self, expression: Q, serialize=True) -> QuerySet:
+    def filter(self, expression: Q, serialize=False) -> QuerySet:
         result = self.queryset.filter(expression)
         return self.serializer_class(result, many=True).data if serialize else result
 
-    def get_by_id(self, id: UUID, silent=False, serialize=True) -> QuerySet | None:
+    def get_by_id(self, id: UUID, silent=False, serialize=False) -> QuerySet | None:
         return self.get(Q(id=id), silent, serialize)
 
-    def get_all(self, serialize=True) -> QuerySet:
+    def get_all(self, serialize=False) -> QuerySet:
         result = self.queryset
         return self.serializer_class(result, many=True) if serialize else result
 
@@ -72,10 +74,10 @@ class GenericRepository(IGenericRepository):
     def delete(self, expression: Q) -> QuerySet:
 
         try:
-            return self.get(expression).delete()
-        except self.model.RestrictedError:
+            return self.filter(expression).delete()
+        except RestrictedError:
             raise EntityDeleteRestrictedException()
-        except self.model.ProtectedError:
+        except ProtectedError:
             raise EntityDeleteProtectedException()
 
     def update(self, entity: Model) -> QuerySet:

@@ -26,9 +26,9 @@ class BanMiddleware(MiddlewareMixin):
             user.save()
 
             user_ban_repository = UserBanRepository()
-            user_ban = user_ban_repository.filter(Q(user=user, until__gt=timezone.now()))
+            user_ban = user_ban_repository.filter(Q(user=user, until__gt=timezone.now()), serialize=False)
 
-            if len(user_ban) > 0:
+            if user_ban.exists():
                 raise UserBanException(errors=[
                     {
                         'until': user_ban[0].until,
@@ -38,8 +38,8 @@ class BanMiddleware(MiddlewareMixin):
                 ])
 
         ip_ban_repository = IPBanRepository()
-        ip_ban = ip_ban_repository.filter(Q(ip=ip, until__gt=timezone.now()))
-        if len(ip_ban) > 0:
+        ip_ban = ip_ban_repository.filter(Q(ip=ip, until__gt=timezone.now()), serialize=False)
+        if ip_ban.exists():
             raise UserBanException(errors=[
                 {
                     'until': ip_ban[0].until,
