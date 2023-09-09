@@ -5,14 +5,12 @@ from rest_framework.exceptions import APIException
 class BaseCustomException(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     success = False
-    detail = ''
     errors = None
 
     def __init__(self, detail, code, errors=None):
         super().__init__(detail, code)
         self.status_code = code
         self.success = False
-        self.detail = detail
         self.errors = errors
 
 
