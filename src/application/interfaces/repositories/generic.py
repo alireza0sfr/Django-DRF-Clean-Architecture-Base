@@ -14,7 +14,7 @@ class IGenericRepository(ABC):
         pass
     
     @abstractmethod
-    def serialize(self, dto: BaseDto) -> Serializer:
+    def serialize(self, dto:  BaseDto | list[BaseDto], many: bool) -> Serializer:
         pass
 
     @abstractmethod
@@ -46,5 +46,8 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, dto: BaseDto, partial: bool = False) -> QuerySet:
+    def update(self, dto: BaseDto) -> QuerySet:
+        pass
+
+    def partial_update(self, id: UUID, data: dict) -> QuerySet:
         pass

@@ -38,8 +38,14 @@ class GenericRepository(IGenericRepository):
     def get_queryset(self) -> QuerySet:
         return self.model.objects.all()
 
-    def serialize(self, dto: BaseDto | list[BaseDto], many: bool = False, entity: QuerySet = None, partial: bool = False) -> Serializer:
-        serializer = self.serializer_class(data=asdict(dto), many=many)
+    def serialize(self, dto: BaseDto | list[BaseDto], many: bool = False) -> Serializer:
+
+        if many:
+            data = [asdict(value) for count, value in enumerate(dto)]
+        else:
+            data = asdict(dto)
+
+        serializer = self.serializer_class(data=data, many=many)
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
         return serializer
 
@@ -75,8 +81,19 @@ class GenericRepository(IGenericRepository):
         except ProtectedError:
             raise EntityDeleteProtectedException()
 
-    def update(self, dto: BaseDto, partial: bool = False) -> QuerySet:
-        serializer = self.serialize(dto=dto, entity=self.get_by_pk(dto.id), partial=partial)
+    def update(self, dto: BaseDto) -> QuerySet:
+        serializer = self.serializer_class(self.get_by_pk(dto.id), data=asdict(dto), partial=False)
+        serializer.is_valid(raise_exception=self.raise_serializer_exception)
+
+        try:
+            return serializer.save()
+        except self.model.DoesNotExist:
+            raise EntityNotFoundException()
+
+    def partial_update(self, id: UUID, data: dict) -> QuerySet:
+        serializer = self.serializer_class(self.get_by_pk(id), data=data, partial=True)
+        serializer.is_valid(raise_exception=self.raise_serializer_exception)
+
         try:
             return serializer.save()
         except self.model.DoesNotExist:
