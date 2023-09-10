@@ -18,8 +18,8 @@ def ban_ip_if_max_attempts_exceeded(sender, instance, created, **kwargs):
     ip = instance.ip
     honeypot_repository = HoneypotRepository()
 
-    if created and honeypot_repository.filter(Q(ip=ip)).count() >= config('HONEYPOT_ATTEMPTS'):
-        until = timezone.now() + timedelta(minutes=config('HONEYPOT_BAN_DURATION_IN_MINUTES'))
+    if created and honeypot_repository.filter(Q(ip=ip)).count() >= config('HONEYPOT_ATTEMPTS', cast=int):
+        until = timezone.now() + timedelta(minutes=config('HONEYPOT_BAN_DURATION_IN_MINUTES', cast=int))
         dto = IPBanDto(ip=ip, reason=BanReasons.HONEYPOT.value, until=until)
         ip_ban_repository = IPBanRepository()
         ip_ban_repository.create(dto)
