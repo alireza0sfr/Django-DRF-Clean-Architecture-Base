@@ -13,6 +13,8 @@ class BasePermission(permissions.BasePermission):
 
 class IsSuperUser(BasePermission):
     """Allows access only to superusers."""
+    def has_object_permission(self, request, view, obj):
+        return True
 
     def has_permission(self, request, view):
         parent_access = super().has_permission(request, view)
@@ -21,22 +23,47 @@ class IsSuperUser(BasePermission):
 
 class IsOwnerOrReadonly(BasePermission):
 
-    def has_permission(self, request, view):
-        return True
-    
     def has_object_permission(self, request, view, obj):
         parent_access = super().has_object_permission(request, view, obj)
         return parent_access or obj.author == request.user.id
 
-
-class IsAuthenticatedAndIsVerified(BasePermission):
-
     def has_permission(self, request, view):
-        return bool(
-            request.user and
-            request.user.is_authenticated and
-            request.user.is_verified
-        )
-    
+        return True
+
+
+class IsAuthenticated(BasePermission):
+
     def has_object_permission(self, request, view, obj):
         return True
+
+    def has_permission(self, request, view):
+        parent_access = super().has_permission(request, view)
+        return parent_access or bool(request.user and request.user.is_authenticated)
+
+
+class IsVerified(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        parent_access = super().has_object_permission(request, view, obj)
+        return parent_access or bool(request.user and request.user.is_verified)
+
+    def has_permission(self, request, view):
+        parent_access = super().has_permission(request, view)
+        return parent_access or bool(request.user and request.user.is_verified)
+
+
+class CurrentUserOrAdmin(IsAuthenticated):
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        parent_access = super().has_object_permission(request, view, obj)
+        return parent_access or user.is_staff or obj.pk == user.pk
+
+    def has_permission(self, request, view):
+        user = request.user
+        parent_access = super().has_permission(request, view)
+        return parent_access or user.is_staff
+
+
+class IsAuthenticatedAndIsVerified(IsAuthenticated, IsVerified):
+    pass

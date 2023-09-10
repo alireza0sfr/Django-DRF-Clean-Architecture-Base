@@ -25,6 +25,7 @@ from presentation.controllers.honeypot.views import HoneypotLoginView
 BASENAME = 'api'
 
 urlpatterns = [
+    path(f'{BASENAME}/v1.0/authentication/', include('presentation.api.authentication.urls')),
     path(f'{BASENAME}/v1.0/', include('presentation.api.v1.urls'))
 ]
 

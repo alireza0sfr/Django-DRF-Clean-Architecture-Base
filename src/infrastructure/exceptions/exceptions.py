@@ -42,3 +42,18 @@ class UserBanException(BaseCustomException):
 class ValidationException(BaseCustomException):
     def __init__(self, message='Validation Error!', errors=None):
         super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)
+
+
+class InvalidTokenException(BaseCustomException):
+    def __init__(self, message='Token is Invalid!', errors=None):
+        super().__init__(message, status.HTTP_403_FORBIDDEN, errors)
+
+
+class InvalidIdException(BaseCustomException):
+    def __init__(self, message='id is Invalid!', errors=None):
+        super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)
+
+
+class PasswordMissmatchException(BaseCustomException):
+    def __init__(self, message='Password Missmatch!', errors=None):
+        super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)

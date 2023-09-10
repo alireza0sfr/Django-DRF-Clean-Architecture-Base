@@ -161,6 +161,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 
     'DEFAULT_RENDERER_CLASSES': (
@@ -187,11 +188,53 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'infrastructure.exceptions.custom_handlers.custom_exception_handler'
 }
 
+# Authentication
+DJOSER = {
+    'HIDE_USERS': True,
+    'LOGIN_FIELD': 'username',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': False,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SET_USERNAME_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'USERNAME_RESET_CONFIRM_RETYPE': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'SERIALIZERS': {
+        'activation': 'infrastructure.serializers.accounts.serializers.IdTokenSerializer',
+        'password_reset_confirm': 'infrastructure.serializers.accounts.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype': 'infrastructure.serializers.accounts.serializers.PasswordResetRetypeConfirmSerializer',
+        'user': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
+        'current_user': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
+        'user_create': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
+    },
+    'PERMISSIONS': {
+        'activation': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'password_reset': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'password_reset_confirm': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'set_password': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'username_reset': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'username_reset_confirm': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'set_username': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'user_create': ['rest_framework.permissions.AllowAny'],
+        'user_delete': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'user': ['application.permissions.permissions.CurrentUserOrAdmin'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    }
+}
+
 # Jwt
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-# }
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    'UPDATE_LAST_LOGIN': True,
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.accounts.serializers.TokenObtainPairSerializer",
+}
 
 # Authentication
 AUTH_USER_MODEL = 'accounts.User'
