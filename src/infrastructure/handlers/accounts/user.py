@@ -18,11 +18,10 @@ class UserHandler(BaseHandler):
     serializer_class = UserModelSerializer
     user_ban_repository = UserBanRepository
 
-    def ban(self, user: UserDto, until: datetime, reason: BanReasons, description: str):
-        dto = UserBanDto(user=user, until=until, reason=reason, description=description)
+    def ban(self, user_ban: UserBanDto):
         repository = self.user_ban_repository()
-        return repository.create(dto=dto)
+        return repository.create(dto=user_ban)
 
-    def try_unban(self, user):
+    def try_unban(self, user: UserDto):
         repository = self.user_ban_repository()
         return repository.delete(Q(user=user, until__gt=timezone.now()))
