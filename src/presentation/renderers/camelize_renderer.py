@@ -12,13 +12,13 @@ class CamelizeRenderer(JSONRenderer):
         response = {
           'success': status_code and str(status_code).startswith('2'),
           'code': status_code if status_code else status.HTTP_400_BAD_REQUEST,
-          'message': data.pop('detail') if data.get('detail') else '',
+          'message': data.pop('detail') if isinstance(data, dict) and data.get('detail') else '',
         }
 
         if exception:
-            response['errors'] = data.get('errors') if data.get('errors') else data
+            response['errors'] = data.get('errors') if isinstance(data, dict) and data.get('errors') else data
         else:
-            response['data'] = data.get('data') if data.get('data') else data
+            response['data'] = data.get('data') if isinstance(data, dict) and data.get('data') else data
 
         camelize = CamelCaseJSONRenderer().render(response, accepted_media_type, renderer_context)
         return camelize
