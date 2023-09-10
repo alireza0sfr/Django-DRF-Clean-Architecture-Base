@@ -32,7 +32,7 @@ class BaseHandler(IBaseHandler):
         result = self.repository.filter(expression)
         return self.serializer_class(result, many=True).data if serialize else result
 
-    def list(self, serialize=True) -> QuerySet:
+    def get_all(self, serialize=True) -> QuerySet:
         result = self.repository.get_all()
         return self.serializer_class(result, many=True).data if serialize else result
     

@@ -37,3 +37,8 @@ class CaptchaTokenInvalidException(BaseCustomException):
 class UserBanException(BaseCustomException):
     def __init__(self, message='User is Banned!', errors=None):
         super().__init__(message, status.HTTP_403_FORBIDDEN, errors)
+
+
+class ValidationException(BaseCustomException):
+    def __init__(self, message='Validation Error!', errors=None):
+        super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)

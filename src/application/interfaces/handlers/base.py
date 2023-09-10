@@ -21,7 +21,7 @@ class IBaseHandler(ABC):
         pass
     
     @abstractmethod
-    def list(self, serialize: bool) -> QuerySet:
+    def get_all(self, serialize: bool) -> QuerySet:
         pass
     
     @abstractmethod

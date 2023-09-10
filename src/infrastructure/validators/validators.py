@@ -1,6 +1,7 @@
 from enum import Enum
 
-from src.application.interfaces.validators import IValidator
+from application.interfaces.validators import IValidator
+from infrastructure.exceptions.exceptions import ValidationException
 
 
 class Validator:
@@ -23,7 +24,8 @@ class Validator:
                         'value': prop,
                     })
 
-        return errors
+        if len(errors) > 0:
+            raise ValidationException(errors)
 
 
 class VNotEmpty(IValidator):
