@@ -14,13 +14,15 @@ from infrastructure.serializers.accounts.serializers import UserModelSerializer
 
 
 class UserHandler(BaseHandler):
-    repository = UserRepository(),
+    repository = UserRepository
     serializer_class = UserModelSerializer
-    user_ban_repository = UserBanRepository()
+    user_ban_repository = UserBanRepository
 
     def ban(self, user: UserDto, until: datetime, reason: BanReasons, description: str):
         dto = UserBanDto(user=user, until=until, reason=reason, description=description)
-        return self.user_ban_repository.create(dto=dto)
+        repository = self.user_ban_repository()
+        return repository.create(dto=dto)
 
     def try_unban(self, user):
-        return self.user_ban_repository.delete(Q(user=user, until__gt=timezone.now()))
+        repository = self.user_ban_repository()
+        return repository.delete(Q(user=user, until__gt=timezone.now()))
