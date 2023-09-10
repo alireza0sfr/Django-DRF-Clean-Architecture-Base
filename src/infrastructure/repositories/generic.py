@@ -43,19 +43,17 @@ class GenericRepository(IGenericRepository):
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
         return serializer
 
-    def get(self, expression: Q, silent=False) -> QuerySet | None:
+    def get(self, expression: Q) -> QuerySet:
         try:
             return self.queryset.get(expression)
         except self.model.DoesNotExist:
-            if silent:
-                return None
             raise EntityNotFoundException()
 
-    def filter(self, expression: Q, serialize=False) -> QuerySet:
+    def filter(self, expression: Q) -> QuerySet:
         return self.queryset.filter(expression)
 
-    def get_by_pk(self, pk: UUID, silent=False, serialize=False) -> QuerySet | None:
-        return self.get(Q(pk=pk), silent=silent)
+    def get_by_pk(self, pk: UUID) -> QuerySet:
+        return self.get(Q(pk=pk))
 
     def get_all(self) -> QuerySet:
         return self.queryset

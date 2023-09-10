@@ -13,7 +13,7 @@ class IBaseHandler(ABC):
     raise_serializer_exception: bool
     
     @abstractmethod
-    def get(self, pk: UUID, serialize=False, silent=False) -> QuerySet:
+    def get(self, pk: UUID, serialize=False) -> QuerySet:
         pass
     
     @abstractmethod

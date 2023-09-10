@@ -18,7 +18,7 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def get(self, expression: Q, silent: bool) -> QuerySet:
+    def get(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod
@@ -26,7 +26,7 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_pk(self, pk: UUID, silent: bool) -> QuerySet:
+    def get_by_pk(self, pk: UUID) -> QuerySet:
         pass
 
     @abstractmethod
