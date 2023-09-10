@@ -25,7 +25,7 @@ class Validator:
                     })
 
         if len(errors) > 0:
-            raise ValidationException(errors)
+            raise ValidationException(errors=errors)
 
 
 class VNotEmpty(IValidator):
