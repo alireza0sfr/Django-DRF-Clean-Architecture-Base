@@ -245,6 +245,8 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Lorem',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'/api/v[0-9].[0-9]/',
+    'SERVE_PERMISSIONS': ['application.permissions.permissions.IsAdminUser'],
     "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "persistAuthorization": True,

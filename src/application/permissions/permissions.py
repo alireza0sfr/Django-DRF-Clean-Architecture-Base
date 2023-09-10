@@ -21,6 +21,16 @@ class IsSuperUser(BasePermission):
         return parent_access or bool(request.user and request.user.is_superuser)
 
 
+class IsAdminUser(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return True
+
+    def has_permission(self, request, view):
+        parent_access = super().has_permission(request, view)
+        return parent_access or bool(request.user and request.user.is_staff)
+
+
 class IsOwnerOrReadonly(BasePermission):
 
     def has_object_permission(self, request, view, obj):
