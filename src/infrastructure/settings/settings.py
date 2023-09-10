@@ -204,6 +204,8 @@ DJOSER = {
     'LOGOUT_ON_PASSWORD_CHANGE': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'frontend-url-for-password-change/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'frontend-url-for-username-change/{uid}/{token}',
     'SERIALIZERS': {
         'activation': 'infrastructure.serializers.accounts.serializers.IdTokenSerializer',
         'password_reset_confirm': 'infrastructure.serializers.accounts.serializers.PasswordResetConfirmSerializer',
