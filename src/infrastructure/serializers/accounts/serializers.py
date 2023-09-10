@@ -39,7 +39,7 @@ class IdTokenSerializer(Serializer):
         validated_data = super().validate(attrs)
 
         try:
-            user = User.objects.get(pk=self.initial_data.get("uid", ""))
+            user = User.objects.get(pk=self.initial_data.get("id", ""))
         except (User.DoesNotExist, ValueError, TypeError, OverflowError):
             raise InvalidIdException()
 
