@@ -18,7 +18,7 @@ class BaseHandler(IBaseHandler):
         if not self.serializer_class:
             raise ImproperlyConfigured('Handlers Should define a serializer_class Property!')
 
-        if not self.repository or not isinstance(self.repository, GenericRepository):
+        if not self.repository or not issubclass(self.repository, GenericRepository):
             raise ImproperlyConfigured('Handlers Should define a repository Property!')
 
         self.raise_serializer_exception = raise_serializer_exception
