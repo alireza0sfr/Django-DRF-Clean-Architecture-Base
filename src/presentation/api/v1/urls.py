@@ -1,7 +1,5 @@
 
-from django.urls import path, include
-from presentation.api.router import router
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+urlpatterns = router.urls
