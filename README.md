@@ -146,8 +146,8 @@ This project main goal is to provide an enreach starting point for mid-level to 
     <p>Every layer has it's own README.md for furture explanation</p>
   </li>
   <li>
-       <strong>Change env variables in /env to suite your project needs</strong>
-        <p>/env directory contains environment variables for database and django</p>
+       <strong>Change env variables in /envs to suite your project needs</strong>
+        <p>/envs directory contains environment variables for database and django</p>
   </li>
     <li>
        <strong>Review settings in /src/infrastructure/settings</strong>
