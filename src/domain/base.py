@@ -3,7 +3,7 @@ from uuid import uuid4 as GUID
 from django.db import models
 from django.utils import timezone
 
-from .enums.accounts.enum import BanReasons
+from .enums.identity.enum import BanReasons
 
 
 class BaseModel(models.Model):

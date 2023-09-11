@@ -208,12 +208,12 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'frontend-url-for-password-change/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'frontend-url-for-username-change/{uid}/{token}',
     'SERIALIZERS': {
-        'activation': 'infrastructure.serializers.accounts.serializers.IdTokenSerializer',
-        'password_reset_confirm': 'infrastructure.serializers.accounts.serializers.PasswordResetConfirmSerializer',
-        'password_reset_confirm_retype': 'infrastructure.serializers.accounts.serializers.PasswordResetRetypeConfirmSerializer',
-        'user': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
-        'current_user': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
-        'user_create': 'infrastructure.serializers.accounts.serializers.UserModelSerializer',
+        'activation': 'infrastructure.serializers.identity.serializers.IdTokenSerializer',
+        'password_reset_confirm': 'infrastructure.serializers.identity.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype': 'infrastructure.serializers.identity.serializers.PasswordResetRetypeConfirmSerializer',
+        'user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
+        'current_user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
+        'user_create': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
     },
     'PERMISSIONS': {
         'activation': ['application.permissions.permissions.CurrentUserOrAdmin'],
@@ -236,11 +236,11 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'UPDATE_LAST_LOGIN': True,
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-    "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.accounts.serializers.TokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.identity.serializers.TokenObtainPairSerializer",
 }
 
 # Authentication
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'identity.User'
 
 # DRF spectacular
 SPECTACULAR_SETTINGS = {

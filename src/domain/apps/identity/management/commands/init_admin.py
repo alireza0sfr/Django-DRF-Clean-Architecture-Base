@@ -13,4 +13,4 @@ class Command(BaseCommand):
             print('Admin user created!')
 
         else:
-            print('Admin accounts can only be initialized if no admin accounts exists!')
+            print('Admin account can only be initialized if no admin account exists!')

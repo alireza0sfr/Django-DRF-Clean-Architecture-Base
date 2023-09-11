@@ -3,7 +3,7 @@ from django.core import exceptions as django_exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as JWTTokenObtainPairSerializer
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
 
-from domain.apps.accounts.models import User, UserBan, IPBan
+from domain.apps.identity.models import User, UserBan, IPBan
 from infrastructure.exceptions.exceptions import InvalidTokenException, InvalidIdException, ValidationException, PasswordMissmatchException
 
 

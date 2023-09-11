@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 
-from application.dtos.accounts.user import UserDto
+from application.dtos.identity.user import UserDto
 
 
 class IPService:

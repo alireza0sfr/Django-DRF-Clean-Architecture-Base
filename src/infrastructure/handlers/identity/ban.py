@@ -1,6 +1,6 @@
 from infrastructure.handlers.base import BaseHandler
-from infrastructure.repositories.accounts.ban import UserBanRepository, IPBanRepository
-from infrastructure.serializers.accounts.serializers import IPBanModelSerializer, UserBanModelSerializer
+from infrastructure.repositories.identity.ban import UserBanRepository, IPBanRepository
+from infrastructure.serializers.identity.serializers import IPBanModelSerializer, UserBanModelSerializer
 
 
 class IPBanHandler(BaseHandler):

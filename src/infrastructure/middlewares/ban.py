@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
 
 from infrastructure.exceptions.exceptions import UserBanException
-from infrastructure.repositories.accounts.ban import UserBanRepository, IPBanRepository
+from infrastructure.repositories.identity.ban import UserBanRepository, IPBanRepository
 from infrastructure.services.ip import IPService
 
 

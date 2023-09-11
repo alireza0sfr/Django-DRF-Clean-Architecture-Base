@@ -2,15 +2,15 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime
 
-from domain.enums.accounts.enum import BanReasons
+from domain.enums.identity.enum import BanReasons
 
-from application.dtos.accounts.user import UserDto
-from application.dtos.accounts.ban import UserBanDto
+from application.dtos.identity.user import UserDto
+from application.dtos.identity.ban import UserBanDto
 
 from infrastructure.handlers.base import BaseHandler
-from infrastructure.repositories.accounts.ban import UserBanRepository
-from infrastructure.repositories.accounts.user import UserRepository
-from infrastructure.serializers.accounts.serializers import UserModelSerializer
+from infrastructure.repositories.identity.ban import UserBanRepository
+from infrastructure.repositories.identity.user import UserRepository
+from infrastructure.serializers.identity.serializers import UserModelSerializer
 
 
 class UserHandler(BaseHandler):

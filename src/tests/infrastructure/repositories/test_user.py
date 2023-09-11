@@ -4,12 +4,12 @@ import factory
 from django.utils import timezone
 from django.db.models import Q
 
-from domain.enums.accounts.enum import BanReasons
-from application.dtos.accounts.user import UserDto
-from application.dtos.accounts.ban import UserBanDto
-from infrastructure.repositories.accounts.user import UserRepository
+from domain.enums.identity.enum import BanReasons
+from application.dtos.identity.user import UserDto
+from application.dtos.identity.ban import UserBanDto
+from infrastructure.repositories.identity.user import UserRepository
 from tests.base import BaseTest
-from tests.factories.accounts import UserFactory
+from tests.factories.identity import UserFactory
 
 @pytest.mark.django_db
 class TestUserRepository(BaseTest):

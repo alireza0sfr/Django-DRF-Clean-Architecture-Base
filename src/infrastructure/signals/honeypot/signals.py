@@ -4,12 +4,12 @@ from django.db.models.signals import post_save, post_delete
 from django.db.models import Q
 from decouple import config
 
-from domain.apps.accounts.models import IPBan
+from domain.apps.identity.models import IPBan
 from domain.apps.honeypot.models import Honeypot
-from domain.enums.accounts.enum import BanReasons
-from application.dtos.accounts.ban import IPBanDto
+from domain.enums.identity.enum import BanReasons
+from application.dtos.identity.ban import IPBanDto
 from infrastructure.repositories.honeypot.honeypot import HoneypotRepository
-from infrastructure.repositories.accounts.ban import IPBanRepository
+from infrastructure.repositories.identity.ban import IPBanRepository
 
 
 @receiver(post_save, sender=Honeypot)

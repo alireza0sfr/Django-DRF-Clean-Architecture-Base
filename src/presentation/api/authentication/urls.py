@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView
 
-from presentation.controllers.accounts.views import AuthenticationViewSet
+from presentation.controllers.identity.views import AuthenticationViewSet
 
 
 router = DefaultRouter()

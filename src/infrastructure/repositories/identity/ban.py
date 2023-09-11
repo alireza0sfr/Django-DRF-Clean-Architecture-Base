@@ -1,9 +1,9 @@
 from django.db.models import QuerySet, Q
 from django.utils import timezone
 
-from domain.apps.accounts.models import IPBan, UserBan
+from domain.apps.identity.models import IPBan, UserBan
 from infrastructure.repositories.generic import GenericRepository
-from infrastructure.serializers.accounts.serializers import UserBanModelSerializer, IPBanModelSerializer
+from infrastructure.serializers.identity.serializers import UserBanModelSerializer, IPBanModelSerializer
 
 
 class UserBanRepository(GenericRepository):

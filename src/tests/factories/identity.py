@@ -22,7 +22,7 @@ class UserFactory(DjangoModelFactory, BaseFactory):
     date_joined = timezone.now()
 
     class Meta:
-        model = 'accounts.User'
+        model = 'identity.User'
 
 
 class UserBanFactory(DjangoModelFactory, BaseFactory):
@@ -31,4 +31,4 @@ class UserBanFactory(DjangoModelFactory, BaseFactory):
     reason = 'Test'
 
     class Meta:
-        model = 'accounts.UserBan'
+        model = 'identity.UserBan'

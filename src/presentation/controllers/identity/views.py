@@ -1,6 +1,6 @@
 from djoser.views import UserViewSet
 
-from infrastructure.repositories.accounts.user import UserRepository
+from infrastructure.repositories.identity.user import UserRepository
 
 
 class AuthenticationViewSet(UserViewSet):

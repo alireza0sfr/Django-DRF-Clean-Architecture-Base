@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from domain.apps.accounts.managers import UserManager
+from domain.apps.identity.managers import UserManager
 from domain.base import BaseModel, BaseBanModel
 
 
