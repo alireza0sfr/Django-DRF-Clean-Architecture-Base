@@ -10,12 +10,29 @@ class UserDto(BaseDto):
     password: str
     email: str
 
-    last_login: datetime
-    date_joined: datetime
-    last_used_ip: str
+    is_active: bool = True
+    is_verified: bool = True
+    is_superuser: bool = False
+    is_staff: bool = False
+    is_hidden: bool = False
 
-    is_active: bool
-    is_verified: bool
-    is_superuser: bool
-    is_staff: bool
-    is_hidden: bool
+    last_login: datetime = ''
+    date_joined: datetime = ''
+    last_used_ip: str = ''
+
+
+
+# @define
+# class UserDto(BaseDto):
+#     username: str
+#     email: str
+
+#     is_active: bool = True
+#     is_verified: bool = True
+#     is_superuser: bool = False
+#     is_staff: bool = False
+#     is_hidden: bool = False
+
+#     last_login: datetime = ''
+#     date_joined: datetime = ''
+#     last_used_ip: str = ''

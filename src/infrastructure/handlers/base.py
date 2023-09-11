@@ -48,7 +48,7 @@ class BaseHandler(IBaseHandler):
         result = repository.bulk_create(dtos)
         return self.serializer_class(result, many=True).data if serialize else result
     
-    def delete(self, expression: Q) -> QuerySet:
+    def delete(self, expression: Q, serialize: bool = True) -> QuerySet:
         repository = self.repository()
         result = repository.delete(expression)
         return result
