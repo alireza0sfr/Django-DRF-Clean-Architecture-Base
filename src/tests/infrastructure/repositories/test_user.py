@@ -61,7 +61,7 @@ class TestUserRepository(BaseTest):
         assert response.username == dto.username
         assert response.email == dto.email
 
-    def test_build_create(self):
+    def test_bulk_create(self):
         # Arrange
         user1 = factory.build(dict, FACTORY_CLASS=UserFactory)
         user2 = factory.build(dict, FACTORY_CLASS=UserFactory)
@@ -99,7 +99,6 @@ class TestUserRepository(BaseTest):
 
         # Assert
         assert response[0] >= 2
-
 
     def test_update(self):
         # Arrange
