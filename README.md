@@ -121,6 +121,11 @@ This project main goal is to provide an enreach starting point for mid-level to 
   </li>
 
   <li>
+    <strong>Honeypot</strong>
+    <p>Honeypot admin panel to ban anyone tries to brute force into /admin</p>
+  </li>
+
+  <li>
     <strong>Preconfigured</strong>        
     <p>Preconfigured settings and etc...</p>
   </li>
