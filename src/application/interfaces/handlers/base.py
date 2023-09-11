@@ -25,13 +25,17 @@ class IBaseHandler(ABC):
         pass
     
     @abstractmethod
-    def create(self, dto: BaseDto) -> QuerySet:
+    def create(self, dto: BaseDto, serialize: bool) -> QuerySet:
         pass
     
     @abstractmethod
-    def update(self, dto: BaseDto, partial: bool) -> QuerySet:
+    def delete(self, pk: UUID, serialize: bool) -> QuerySet:
         pass
-    
+
     @abstractmethod
-    def delete(self, pk: UUID) -> QuerySet:
+    def update(self, dto: BaseDto, serialize: bool) -> QuerySet:
+        pass
+
+    @abstractmethod
+    def partial_update(self, id: UUID, data: dict, serialize: bool) -> QuerySet:
         pass

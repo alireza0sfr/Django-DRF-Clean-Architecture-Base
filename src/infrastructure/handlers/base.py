@@ -38,18 +38,27 @@ class BaseHandler(IBaseHandler):
         result = repository.get_all()
         return self.serializer_class(result, many=True).data if serialize else result
     
-    def create(self, dto: BaseDto) -> QuerySet:
+    def create(self, dto: BaseDto, serialize=True) -> QuerySet:
         repository = self.repository()
-        return repository.create(dto)
+        result = repository.create(dto)
+        return self.serializer_class(result).data if serialize else result
     
-    def bulk_create(self, dtos: list[BaseDto]) -> QuerySet:
+    def bulk_create(self, dtos: list[BaseDto], serialize=True) -> QuerySet:
         repository = self.repository()
-        return repository.bulk_create(dtos)
+        result = repository.bulk_create(dtos)
+        return self.serializer_class(result, many=True).data if serialize else result
     
     def delete(self, expression: Q) -> QuerySet:
         repository = self.repository()
-        return repository.delete(expression)
+        result = repository.delete(expression)
+        return result
     
-    def update(self, dto: BaseDto, partial: bool) -> QuerySet:
+    def update(self, dto: BaseDto, serialize=True) -> QuerySet:
         repository = self.repository()
-        return repository.update(dto, partial=partial)
+        result = repository.update(dto)
+        return self.serializer_class(result).data if serialize else result
+
+    def partial_update(self, pk: UUID, data: dict = None, serialize=True) -> QuerySet:
+        repository = self.repository()
+        result = repository.partial_update(pk, data)
+        return self.serializer_class(result).data if serialize else result
