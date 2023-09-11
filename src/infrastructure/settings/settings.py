@@ -106,6 +106,7 @@ DATABASES = {
         "PASSWORD": config('DB_PASS'),
         "HOST": config('DB_HOST'),
         "PORT": config('DB_PORT', cast=int),
+        "CONN_HEALTH_CHECKS": True,
     }
 }
 
