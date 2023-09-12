@@ -2,25 +2,84 @@ name: Django Project Test and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  Docker:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup docker-compose
-      run: docker-compose -f docker/docker-compose.yml up -d
 
   Test:
+
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test
+      DEBUG: True
+      ALLOWED_HOSTS: 0.0.0.0
+      APP_NAME: backend
+
+      SEQ_LOG_LEVEL: INFO
+      FILE_LOG_LEVEL: INFO
+      CONSOLE_LOG_LEVEL: INFO
+      LOG_HANDLERS: console, file, seq
+
+      SUPERUSER_USERNAME: admin
+      SUPERUSER_PASSWORD: '!@#QWE123qwe'
+
+      HONEYPOT_ATTEMPTS: 3
+      HONEYPOT_BAN_DURATION_IN_MINUTES: 120
+      ADMIN_SECURE_LOGIN_ROUTE: 'admin-secret-entrance'
+
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: postgres
+      DB_USER: sa
+      DB_PASS: '!@#QWE123qwe'
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASS }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    - name: Run Tests
-      run: docker exec backend sh -c "pytest ."
+    - uses: actions/checkout@v2.4.0
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2.3.1
+      with:
+        python-version: 3.11
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+    - name: Install the project dependencies
+      run: poetry install
+    - name: Run migrations
+      working-directory: ./src
+      run: |
+        source ${{ github.workspace }}/.venv/bin/activate
+        python manage.py migrate
+    - name: Run tests
+      working-directory: ./src
+      run: |
+        source ${{ github.workspace }}/.venv/bin/activate
+        pytest .
 
   Deploy:
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'success') }} 
+    name: Deploy
+    needs: Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -33,6 +92,6 @@ jobs:
         port: ${{secrets.PORT}}
         script: |
           cd ${{secrets.PROJECT_PATH}}
-          docker-compose -f docker/docker-compose-prod.yml stop
+          docker compose -f docker-compose-stage.yml stop
           git pull
-          docker-compose -f docker/docker-compose-prod.yml restart
+          docker compose -f docker-compose-stage.yml restart
