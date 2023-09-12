@@ -23,9 +23,14 @@ class BaseHandler(IBaseHandler):
 
         self.raise_serializer_exception = raise_serializer_exception
     
-    def get(self, pk: UUID, serialize=True) -> QuerySet:
+    def get(self, expression: Q, serialize=True) -> QuerySet:
         repository = self.repository()
-        result = repository.get(Q(id=pk))
+        result = repository.get(expression=expression)
+        return self.serializer_class(result).data if serialize else result
+    
+    def get_by_pk(self, pk: UUID, serialize=True) -> QuerySet:
+        repository = self.repository()
+        result = repository.get_by_pk(pk=pk)
         return self.serializer_class(result).data if serialize else result
 
     def filter(self, expression: Q, serialize=True) -> QuerySet:
