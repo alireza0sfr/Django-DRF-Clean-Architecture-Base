@@ -13,6 +13,10 @@ class UserModelSerializer(ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'date_joined', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden', 'created_date']
         read_only_fields = ['id', 'date_joined', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden', 'created_date']
+        extra_kwargs = {
+            'email': {'validators': []},
+            'username': {'validators': []},
+        }
 
 
 class UserBanModelSerializer(ModelSerializer):
@@ -22,6 +26,13 @@ class UserBanModelSerializer(ModelSerializer):
         model = UserBan
         fields = ['id', 'user', 'until', 'reason', 'description', 'created_date']
         read_only_fields = ['id', 'created_date']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user, created = User.objects.get_or_create(**user_data)
+        response = UserBan.objects.create(user=user, **validated_data)
+        
+        return response
 
 
 class IPBanModelSerializer(ModelSerializer):
