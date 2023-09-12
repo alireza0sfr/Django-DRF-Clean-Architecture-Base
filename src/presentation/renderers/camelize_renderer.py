@@ -16,7 +16,8 @@ class CamelizeRenderer(JSONRenderer):
         }
 
         if exception:
-            response['errors'] = data.get('errors') if isinstance(data, dict) and data.get('errors') else data
+            response['key'] = data.get('key') if 'key' in data else ''
+            response['errors'] = data.get('errors') if 'errors' in data else data
         else:
             response['data'] = data.get('data') if isinstance(data, dict) and data.get('data') else data
 
