@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from domain.base import BaseModel
 
-class Honeypot(BaseModel):
+class LoginAttempt(BaseModel):
     username = models.CharField(_("username"), max_length=255, blank=True, null=True)
     password = models.CharField(_("password"), max_length=255, blank=True, null=True)
     ip = models.GenericIPAddressField(_("ip address"), protocol='both', blank=True, null=True)

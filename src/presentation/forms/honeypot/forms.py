@@ -1,5 +1,5 @@
 from django import forms
-from domain.apps.honeypot.models import Honeypot
+from domain.apps.honeypot.models import LoginAttempt
 
 
 class LoginForm(forms.ModelForm):
@@ -7,5 +7,5 @@ class LoginForm(forms.ModelForm):
     password = forms.CharField(required=True)
 
     class Meta:
-        model = Honeypot
+        model = LoginAttempt
         fields = ["username", "password"]

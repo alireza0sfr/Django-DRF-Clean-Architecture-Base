@@ -1,7 +1,7 @@
-from domain.apps.honeypot.models import Honeypot
+from domain.apps.honeypot.models import LoginAttempt
 from infrastructure.repositories.generic import GenericRepository
-from infrastructure.serializers.honeypot.serializers import HoneypotModelSerializer
+from infrastructure.serializers.honeypot.serializers import LoginAttemptModelSerializer
 
-class HoneypotRepository(GenericRepository):
-    model = Honeypot
-    serializer_class = HoneypotModelSerializer
+class LoginAttemptRepository(GenericRepository):
+    model = LoginAttempt
+    serializer_class = LoginAttemptModelSerializer
