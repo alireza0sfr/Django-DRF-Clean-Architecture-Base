@@ -57,3 +57,7 @@ class InvalidIdException(BaseCustomException):
 class PasswordMissmatchException(BaseCustomException):
     def __init__(self, message='Password Missmatch!', errors=None):
         super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)
+
+class UserNotBannedException(BaseCustomException):
+    def __init__(self, message='User is Not Banned', errors=None):
+        super().__init__(message, status.HTTP_400_BAD_REQUEST, errors)

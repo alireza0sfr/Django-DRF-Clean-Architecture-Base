@@ -80,6 +80,8 @@ class GenericRepository(IGenericRepository):
             raise EntityDeleteRestrictedException()
         except ProtectedError:
             raise EntityDeleteProtectedException()
+        except self.model.DoesNotExist:
+            raise EntityNotFoundException()
 
     def update(self, dto: BaseDto) -> QuerySet:
         serializer = self.serializer_class(self.get_by_pk(dto.id), data=asdict(dto), partial=False)

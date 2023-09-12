@@ -11,7 +11,8 @@ from infrastructure.handlers.base import BaseHandler
 from infrastructure.handlers.identity.ban import UserBanHandler
 from infrastructure.repositories.identity.ban import UserBanRepository
 from infrastructure.repositories.identity.user import UserRepository
-from infrastructure.serializers.identity.serializers import UserModelSerializer, UserBanModelSerializer
+from infrastructure.serializers.identity.serializers import UserModelSerializer
+from infrastructure.exceptions.exceptions import EntityNotFoundException, UserNotBannedException
 
 
 class UserHandler(BaseHandler):
@@ -23,6 +24,10 @@ class UserHandler(BaseHandler):
         handler = UserBanHandler()
         return handler.create(dto=user_ban)
 
-    def try_unban(self, user: UserDto):
+    def unban(self, user: UserDto):
         repository = self.user_ban_repository()
-        return repository.delete(Q(user=user, until__gt=timezone.now()))
+
+        try:
+            return repository.delete(Q(user=user, until__gt=timezone.now()))
+        except EntityNotFoundException:
+            raise UserNotBannedException()
