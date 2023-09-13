@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils import timezone
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.forms import ModelForm, CharField, PasswordInput
+from django.utils.translation import gettext_lazy as _
 
 from infrastructure.exceptions.exceptions import PasswordMissmatchException
 
@@ -44,11 +45,26 @@ class UserChangeForm(ModelForm):
     disabled password hash display field.
     """
 
-    password = ReadOnlyPasswordHashField()
+    password = ReadOnlyPasswordHashField(
+        label=_("Password"),
+        help_text=_(
+            "Raw passwords are not stored, so there is no way to see this "
+            "user’s password, but you can change the password using "
+            '<a href="{}">this form</a>.'
+        ),
+    )
 
     class Meta:
         model = User
         fields = ['username', 'email', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        password = self.fields.get("password")
+        if password:
+            password.help_text = password.help_text.format(
+                f"../../{self.instance.pk}/password/"
+            )
 
 class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
