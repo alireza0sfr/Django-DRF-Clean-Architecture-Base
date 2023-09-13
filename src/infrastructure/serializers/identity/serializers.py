@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer, Serializer, CharField
 
 from domain.apps.identity.models import User, UserBan, IPBan
 from infrastructure.exceptions.exceptions import InvalidTokenException, InvalidIdException, ValidationException, PasswordMissmatchException
-
+from infrastructure.exceptions.exceptions import EntityNotFoundException
 
 class UserModelSerializer(ModelSerializer):
 
@@ -13,14 +13,10 @@ class UserModelSerializer(ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'date_joined', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden', 'created_date']
         read_only_fields = ['id', 'date_joined', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden', 'created_date']
-        extra_kwargs = {
-            'email': {'validators': []},
-            'username': {'validators': []},
-        }
 
 
 class UserBanModelSerializer(ModelSerializer):
-    user = UserModelSerializer()
+    user = UserModelSerializer(read_only=True)
 
     class Meta:
         model = UserBan
@@ -28,8 +24,13 @@ class UserBanModelSerializer(ModelSerializer):
         read_only_fields = ['id', 'created_date']
 
     def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        user, created = User.objects.get_or_create(**user_data)
+        user_data = self.initial_data.pop('user')
+
+        try:
+            user = User.objects.get(id=user_data.get('id'))
+        except User.DoesNotExist:
+            raise EntityNotFoundException(message='User not Found!')
+
         response = UserBan.objects.create(user=user, **validated_data)
         
         return response
