@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
 
 from infrastructure.exceptions.exceptions import UserBanException
-from infrastructure.repositories.identity.ban import UserBanRepository, IPBanRepository
+from infrastructure.handlers.identity.ban import UserBanHandler, IPBanHandler
 from infrastructure.services.ip import IPService
 
 
@@ -25,8 +25,8 @@ class BanMiddleware(MiddlewareMixin):
             user.last_used_ip = ip
             user.save()
 
-            user_ban_repository = UserBanRepository()
-            user_ban = user_ban_repository.filter(Q(user=user, until__gt=timezone.now()))
+            user_ban_handler = UserBanHandler()
+            user_ban = user_ban_handler.filter(Q(user=user, until__gt=timezone.now()))
 
             if user_ban.exists():
                 raise UserBanException(errors=[
@@ -37,8 +37,8 @@ class BanMiddleware(MiddlewareMixin):
                     }
                 ])
 
-        ip_ban_repository = IPBanRepository()
-        ip_ban = ip_ban_repository.filter(Q(ip=ip, until__gt=timezone.now()))
+        ip_ban_handler = IPBanHandler()
+        ip_ban = ip_ban_handler.filter(Q(ip=ip, until__gt=timezone.now()))
         if ip_ban.exists():
             raise UserBanException(errors=[
                 {

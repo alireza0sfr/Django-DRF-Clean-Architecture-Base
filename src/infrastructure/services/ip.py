@@ -1,11 +1,11 @@
 from django.http import HttpRequest
 
 from application.dtos.identity.user import UserDto
+from application.interfaces.services.ip import IIPService
 
+class IPService(IIPService):
 
-class IPService:
-    @staticmethod
-    def get_client_ip(request: HttpRequest):
+    def get_client_ip(self, request: HttpRequest) -> str:
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
             ip = x_forwarded_for.split(',')[0]
@@ -13,6 +13,6 @@ class IPService:
             ip = request.META.get('REMOTE_ADDR')
         return ip
 
-    @staticmethod
-    def get_user_ip(user: UserDto):
+
+    def get_user_ip(self, user: UserDto) -> str:
         return user.last_used_ip
