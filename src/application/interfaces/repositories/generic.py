@@ -30,7 +30,7 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def list(self) -> QuerySet:
+    def get_list(self) -> QuerySet:
         pass
 
     @abstractmethod

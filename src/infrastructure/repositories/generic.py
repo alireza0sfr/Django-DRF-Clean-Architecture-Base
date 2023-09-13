@@ -61,7 +61,7 @@ class GenericRepository(IGenericRepository):
     def get_by_pk(self, pk: UUID) -> QuerySet:
         return self.get(Q(pk=pk))
     
-    def list(self) -> QuerySet:
+    def get_list(self) -> QuerySet:
         return self.queryset
 
     def get_all(self) -> QuerySet:
