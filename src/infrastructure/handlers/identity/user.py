@@ -28,6 +28,6 @@ class UserHandler(BaseHandler):
         repository = self.user_ban_repository()
 
         try:
-            return repository.delete(Q(user=user, until__gt=timezone.now()))
+            return repository.delete(Q(user__id=user.id, until__gt=timezone.now()))
         except EntityNotFoundException:
             raise UserNotBannedException()
