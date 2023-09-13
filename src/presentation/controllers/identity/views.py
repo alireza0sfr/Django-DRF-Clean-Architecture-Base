@@ -1,11 +1,13 @@
 from rest_framework.response import Response
 from django.db.models import Q
-from djoser.views import UserViewSet
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from django.contrib.auth import get_user_model
+from djoser.views import UserViewSet
 
-from domain.apps.identity.models import User
 from infrastructure.exceptions.exceptions import UserIsNotActiveException, EntityNotFoundException
 from infrastructure.services.token import TokenService
+
+User = get_user_model()
 
 class AuthenticationViewSet(UserViewSet):
     
