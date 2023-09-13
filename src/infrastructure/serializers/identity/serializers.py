@@ -29,7 +29,7 @@ class UserBanModelSerializer(ModelSerializer):
         try:
             user = User.objects.get(id=user_data.get('id'))
         except User.DoesNotExist:
-            raise EntityNotFoundException(message='User not Found!')
+            raise EntityNotFoundException(message='User Not Found!')
 
         response = UserBan.objects.create(user=user, **validated_data)
         
