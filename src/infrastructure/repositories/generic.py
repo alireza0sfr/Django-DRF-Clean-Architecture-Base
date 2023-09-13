@@ -60,9 +60,12 @@ class GenericRepository(IGenericRepository):
 
     def get_by_pk(self, pk: UUID) -> QuerySet:
         return self.get(Q(pk=pk))
+    
+    def list(self) -> QuerySet:
+        return self.queryset
 
     def get_all(self) -> QuerySet:
-        return self.queryset
+        return self.model.objects.all()
 
     def create(self, dto: BaseDto) -> QuerySet:
         serializer = self.serialize(dto=dto)
