@@ -364,9 +364,3 @@ else:
     EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
     EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
     DEFAULT_FROM_EMAIL = config('EMAIL_DEFAULT_FROM_EMAIL')
-
-RECAPTCHA_SETTINGS = {
-    'SECRET_KEY': '',
-    'VERIFY_ENDPOINT': '',
-    'CHECK_ENDPOINTS': ['/admin/'],
-}
