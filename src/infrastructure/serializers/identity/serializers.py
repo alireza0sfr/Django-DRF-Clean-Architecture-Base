@@ -1,7 +1,7 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as JWTTokenObtainPairSerializer
-from rest_framework.serializers import ModelSerializer, Serializer, CharField
+from rest_framework.serializers import ModelSerializer, Serializer, CharField, EmailField
 
 from domain.apps.identity.models import User, UserBan, IPBan
 from infrastructure.exceptions.exceptions import InvalidTokenException, InvalidIdException, ValidationException, PasswordMissmatchException
@@ -103,3 +103,9 @@ class PasswordResetConfirmSerializer(IdTokenSerializer, PasswordSerializer):
 
 class PasswordResetRetypeConfirmSerializer(IdTokenSerializer, PasswordRetypeSerializer):
     pass
+
+
+class UserRegisterSerializer(Serializer):
+    username = CharField(max_length=255)
+    email = EmailField(max_length=255, allow_blank=True)
+    password = CharField()

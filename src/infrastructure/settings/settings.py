@@ -197,7 +197,7 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL': True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': False,
-    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USER_CREATE_PASSWORD_RETYPE': False,
     'SET_USERNAME_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
@@ -213,7 +213,7 @@ DJOSER = {
         'password_reset_confirm_retype': 'infrastructure.serializers.identity.serializers.PasswordResetRetypeConfirmSerializer',
         'user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
         'current_user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
-        'user_create': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
+        'user_create': 'infrastructure.serializers.identity.serializers.UserRegisterSerializer',
     },
     'PERMISSIONS': {
         'activation': ['application.permissions.permissions.CurrentUserOrAdmin'],

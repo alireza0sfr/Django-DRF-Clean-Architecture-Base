@@ -1,11 +1,12 @@
 import pytest
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from rest_framework import status
 
 from infrastructure.exceptions.exceptions import UserIsNotActiveException
 from infrastructure.services.token import TokenService
-from infrastructure.serializers.identity.serializers import UserModelSerializer
+from factory import Faker
 from tests.factories.identity import UserFactory
 from tests.base import BaseTest
 
@@ -102,3 +103,23 @@ class TestAuthenticationAPI(BaseTest):
         assert response.status_code == status.HTTP_200_OK
         assert str(normal_user.id) in response.data[0].values()
         assert str(hidden_user.id) not in response.data[0].values()
+
+    def test_user_create(self):
+        # Arrange
+        endpoint = reverse('users-list')
+        request = {'email': 'sample@test.com', 'username': Faker('user_name')}
+
+        # Act
+        response = self.api_client.post(endpoint, data=request)
+
+        # Assert
+        assert  response.status_code == status.HTTP_200_OK
+
+        if settings.DJOSER.get('LOGIN_ON_REGISTER'):
+            assert response.data.get('data').get('access_token', '') != ''
+            assert response.data.get('data').get('refresh_token', '') != ''
+            assert response.data.get('data').get('user').get('email', '') == request.get('email')
+            assert response.data.get('data').get('user').get('username', '') == request.get('username')
+        else:
+            assert response.data.get('data').get('email', '') == request.get('email')
+            assert response.data.get('data').get('username', '') == request.get('username')

@@ -1,9 +1,12 @@
 from rest_framework.response import Response
 from django.db.models import Q
+from django.conf import settings
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
+from rest_framework import status
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 
+from infrastructure.commands.identity.user import UserCommand
 from infrastructure.exceptions.exceptions import UserIsNotActiveException, EntityNotFoundException
 from infrastructure.services.token import TokenService
 
@@ -21,6 +24,25 @@ class AuthenticationViewSet(UserViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        command = UserCommand()
+        response = command.create(request.data)
+
+        login = settings.DJOSER.get('LOGIN_ON_REGISTER')
+
+        if login:
+            token_service = TokenService()
+            token = token_service.generate(User.objects.get(pk=response.get('id')))
+            return Response(data={'data': token}, status=status.HTTP_201_CREATED) 
+
+        else:
+            return Response(data={'data': response}, status=status.HTTP_201_CREATED)
     
 
 class CustomTokenObtainPairView(TokenObtainPairView):
