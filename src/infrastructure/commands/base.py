@@ -44,7 +44,7 @@ class BaseCommand(IBaseCommand):
         dto = structure(request.data, self.Dto)
         validator.validate(dto, validator_roles)
         handler: BaseHandler = self.handler()
-        return handler.update(pk, dto, partial=False)
+        return handler.update(dto, partial=False)
 
     def partial_update(self, request, pk=None):
         validator: Validator = self.validator()
@@ -54,7 +54,7 @@ class BaseCommand(IBaseCommand):
         dto = structure(request.data, self.Dto)
         validator.validate(dto, validator_roles)
         handler: BaseHandler = self.handler()
-        return handler.update(pk, dto, partial=True)
+        return handler.update(dto, partial=True)
 
     def destroy(self, request, pk=None):
         validator: Validator = self.validator()
