@@ -67,3 +67,7 @@ class UserNotBannedException(BaseCustomException):
 class UserIsNotActiveException(BaseCustomException):
     def __init__(self, message='User is Not Active',  key='user_not_active', errors=None):
         super().__init__(message, status.HTTP_400_BAD_REQUEST, key=key, errors=errors)
+
+class CastDtoException(BaseCustomException):
+    def __init__(self, message='Cast Dto Error',  key='cast_dto_error', errors=None):
+        super().__init__(message, status.HTTP_400_BAD_REQUEST, key=key, errors=errors)

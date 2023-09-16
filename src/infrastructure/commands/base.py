@@ -5,6 +5,7 @@ from application.dtos.base import BaseDto
 from application.interfaces.commands.base import IBaseCommand
 from infrastructure.handlers.base import BaseHandler
 from infrastructure.validators.validators import Validator, VNotEmpty
+from infrastructure.exceptions.exceptions import CastDtoException
 
 
 class BaseCommand(IBaseCommand):
@@ -18,16 +19,25 @@ class BaseCommand(IBaseCommand):
             raise NotImplementedError('BaseCommand must have a handler attribute and it must be a subclass of '
                                       'BaseHandler')
 
-    def list(self, request):
+    def cast_dto(self, data: dict) -> BaseDto:
+        try:
+            return structure(data, self.Dto)
+        except Exception as e:
+            errors = []
+            for index, x in enumerate(e.exceptions):
+                errors.append({index: x.__notes__[0]}) 
+            raise CastDtoException(errors=errors, message=e.message)
+
+    def list(self):
         handler: BaseHandler = self.handler()
         return handler.get_all()
 
-    def create(self, request):
+    def create(self, data):
         handler: BaseHandler = self.handler()
-        dto = structure(request.data, self.Dto)
+        dto = self.cast_dto(data)
         return handler.create(dto)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, pk=None):
         validator: Validator = self.validator()
         validator_roles = {
             'pk': [VNotEmpty]
@@ -36,27 +46,17 @@ class BaseCommand(IBaseCommand):
         validator.validate({'pk': pk}, validator_roles)
         return handler.get(pk)
 
-    def update(self, request, pk=None):
-        validator: Validator = self.validator()
-        validator_roles = {
-            'id': [VNotEmpty]
-        }
-        dto = structure(request.data, self.Dto)
-        validator.validate(dto, validator_roles)
+    def update(self, data):
+        dto = self.cast_dto(data)
         handler: BaseHandler = self.handler()
         return handler.update(dto, partial=False)
 
-    def partial_update(self, request, pk=None):
-        validator: Validator = self.validator()
-        validator_roles = {
-            'id': [VNotEmpty]
-        }
-        dto = structure(request.data, self.Dto)
-        validator.validate(dto, validator_roles)
+    def partial_update(self, data):
+        dto = self.cast_dto(data)
         handler: BaseHandler = self.handler()
         return handler.update(dto, partial=True)
 
-    def destroy(self, request, pk=None):
+    def destroy(self, pk=None):
         validator: Validator = self.validator()
         validator_roles = {
             'pk': [VNotEmpty]
