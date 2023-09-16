@@ -107,13 +107,13 @@ class TestAuthenticationAPI(BaseTest):
     def test_user_create(self):
         # Arrange
         endpoint = reverse('users-list')
-        request = {'email': 'sample@test.com', 'username': Faker('user_name')}
+        request = {'email': 'sample@test.com', 'username': 'sample_user', 'password': '@123456!'}
 
         # Act
         response = self.api_client.post(endpoint, data=request)
 
         # Assert
-        assert  response.status_code == status.HTTP_200_OK
+        assert  response.status_code == status.HTTP_201_CREATED
 
         if settings.DJOSER.get('LOGIN_ON_REGISTER'):
             assert response.data.get('data').get('access_token', '') != ''

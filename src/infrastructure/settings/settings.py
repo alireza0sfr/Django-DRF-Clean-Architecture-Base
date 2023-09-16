@@ -192,6 +192,7 @@ REST_FRAMEWORK = {
 # Authentication
 DJOSER = {
     'HIDE_USERS': True,
+    'LOGIN_ON_REGISTER': True,
     'LOGIN_FIELD': 'username',
     'SEND_ACTIVATION_EMAIL': True,
     'SEND_CONFIRMATION_EMAIL': True,
