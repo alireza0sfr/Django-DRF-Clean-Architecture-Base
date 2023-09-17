@@ -61,7 +61,7 @@ class PasswordMissmatchException(BaseCustomException):
         super().__init__(message, status.HTTP_400_BAD_REQUEST, key=key, errors=errors)
 
 class UserNotBannedException(BaseCustomException):
-    def __init__(self, message='User is Not Banned',  key='user_bot_banned', errors=None):
+    def __init__(self, message='User is Not Banned',  key='user_not_banned', errors=None):
         super().__init__(message, status.HTTP_400_BAD_REQUEST, key=key, errors=errors)
 
 class UserIsNotActiveException(BaseCustomException):

@@ -9,7 +9,7 @@ from infrastructure.exceptions.exceptions import CastDtoException
 
 
 class BaseCommand(IBaseCommand):
-    handler: BaseHandler = None
+    handler = None
     validator: Validator = Validator
     Dto = BaseDto
 
@@ -28,33 +28,32 @@ class BaseCommand(IBaseCommand):
                 errors.append({index: x.__notes__[0]}) 
             raise CastDtoException(errors=errors, message=e.message)
 
-    def list(self):
+    def list(self, serialize=True):
         handler: BaseHandler = self.handler()
-        return handler.get_all()
+        return handler.get_all(serialize=serialize)
 
-    def create(self, data):
+    def create(self, data, serialize=True):
         handler: BaseHandler = self.handler()
         dto = self.cast_dto(data)
-        return handler.create(dto)
+        return handler.create(dto, serialize=serialize)
 
-    def retrieve(self, pk=None):
+    def retrieve(self, pk=None, serialize=True):
         validator: Validator = self.validator()
         validator_roles = {
             'pk': [VNotEmpty]
         }
         handler: BaseHandler = self.handler()
         validator.validate({'pk': pk}, validator_roles)
-        return handler.get(pk)
+        return handler.get(pk, serialize=serialize)
 
-    def update(self, data):
+    def update(self, data, serialize=True):
         dto = self.cast_dto(data)
         handler: BaseHandler = self.handler()
-        return handler.update(dto, partial=False)
+        return handler.update(dto, serialize=serialize)
 
-    def partial_update(self, data):
-        dto = self.cast_dto(data)
+    def partial_update(self, pk, data, serialize=True):
         handler: BaseHandler = self.handler()
-        return handler.update(dto, partial=True)
+        return handler.partial_update(pk=pk, data=data, serialize=serialize)
 
     def destroy(self, pk=None):
         validator: Validator = self.validator()

@@ -33,7 +33,7 @@ class IBaseHandler(ABC):
         pass
     
     @abstractmethod
-    def delete(self, expression: Q, serialize: bool) -> QuerySet:
+    def delete(self, expression: Q) -> QuerySet:
         pass
 
     @abstractmethod

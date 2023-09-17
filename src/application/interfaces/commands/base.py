@@ -15,23 +15,23 @@ class IBaseCommand(ABC):
         pass
 
     @abstractmethod
-    def list(self):
+    def list(self, serialize: bool):
         pass
 
     @abstractmethod
-    def create(self, data: dict):
+    def create(self, data: dict, serialize: bool):
         pass
 
     @abstractmethod
-    def retrieve(self, pk):
+    def retrieve(self, pk, serialize: bool):
         pass
 
     @abstractmethod
-    def update(self, data: dict):
+    def update(self, data: dict, serialize: bool):
         pass
 
     @abstractmethod
-    def partial_update(self, data: dict):
+    def partial_update(self, data: dict, serialize: bool):
         pass
 
     @abstractmethod
