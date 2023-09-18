@@ -4,13 +4,13 @@ from django.db.models import Q, QuerySet, Model
 from django.db.models import ProtectedError, RestrictedError
 from django.core.exceptions import ImproperlyConfigured
 from typing import Callable
-from attr import asdict
 
 from application.interfaces.repositories.generic import IGenericRepository
 from application.dtos.base import BaseDto
 
 from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, \
     EntityDeleteRestrictedException
+from infrastructure.services.dto import DtoService
 
 
 class GenericRepository(IGenericRepository):
@@ -40,10 +40,12 @@ class GenericRepository(IGenericRepository):
 
     def serialize(self, dto: BaseDto | list[BaseDto], many: bool = False) -> Serializer:
 
+        dto_service = DtoService()
+
         if many:
-            data = [asdict(value) for count, value in enumerate(dto)]
+            data = [dto_service.asdict(value) for count, value in enumerate(dto)]
         else:
-            data = asdict(dto)
+            data = dto_service.asdict(dto)
 
         serializer = self.serializer_class(data=data, many=many)
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
@@ -87,7 +89,8 @@ class GenericRepository(IGenericRepository):
             raise EntityNotFoundException()
 
     def update(self, dto: BaseDto) -> QuerySet:
-        serializer = self.serializer_class(self.get_by_pk(dto.id), data=asdict(dto), partial=False)
+        dto_service = DtoService()
+        serializer = self.serializer_class(self.get_by_pk(dto.id), data=dto_service.asdict(dto), partial=False)
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
 
         try:

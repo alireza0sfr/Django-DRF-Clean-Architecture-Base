@@ -1,17 +1,16 @@
 from django.db.models.query import Q
-from cattrs import structure
 
 from application.dtos.base import BaseDto
 from application.interfaces.commands.base import IBaseCommand
 from infrastructure.handlers.base import BaseHandler
 from infrastructure.validators.validators import Validator, VNotEmpty
-from infrastructure.exceptions.exceptions import CastDtoException
+from infrastructure.services.dto import DtoService
 
 
 class BaseCommand(IBaseCommand):
     handler = None
     validator: Validator = Validator
-    Dto = BaseDto
+    Dto: BaseDto
 
     def __init__(self):
 
@@ -20,13 +19,8 @@ class BaseCommand(IBaseCommand):
                                       'BaseHandler')
 
     def cast_dto(self, data: dict) -> BaseDto:
-        try:
-            return structure(data, self.Dto)
-        except Exception as e:
-            errors = []
-            for index, x in enumerate(e.exceptions):
-                errors.append({index: x.__notes__[0]}) 
-            raise CastDtoException(errors=errors, message=e.message)
+        dto_service = DtoService()
+        return dto_service.cast(data, self.Dto)
 
     def list(self, serialize=True):
         handler: BaseHandler = self.handler()
