@@ -12,7 +12,7 @@ from tests.base import BaseTest
 from tests.factories.identity import UserFactory
 
 @pytest.mark.django_db
-class TestUserRepository(BaseTest):
+class TestUserHandler(BaseTest):
     
     def test_get(self):
         # Arrange
