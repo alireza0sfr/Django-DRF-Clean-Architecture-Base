@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from application.dtos.base import BaseDto
+from django.db.models import Model
 
 
 class IDtoService(ABC):
@@ -10,5 +11,9 @@ class IDtoService(ABC):
         pass
 
     @abstractmethod
-    def cast(self, data: dict, dto: BaseDto) -> BaseDto:
+    def cast(self, data: dict, dto: BaseDto):
+        pass
+
+    @abstractmethod
+    def cast_from_model(self, model: Model, dto):
         pass
