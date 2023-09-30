@@ -22,4 +22,10 @@ class DtoService(IDtoService):
             raise CastDtoException(errors=errors, message=e.message)
 
     def cast_from_model(self, model: Model, dto):
-        return self.cast(model.__dict__, dto)
+        model_dict = model.__dict__
+
+        for key, value in dto.__annotations__.items():
+            if issubclass(value, BaseDto):
+                model_dict[key] = getattr(model, key).__dict__
+
+        return self.cast(model_dict, dto)
