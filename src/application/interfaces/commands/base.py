@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 from application.dtos.base import BaseDto
 from application.interfaces.handlers.base import IBaseHandler
@@ -31,7 +32,7 @@ class IBaseCommand(ABC):
         pass
 
     @abstractmethod
-    def partial_update(self, data: dict, serialize: bool):
+    def partial_update(self, pk: UUID, data: dict, serialize: bool):
         pass
 
     @abstractmethod

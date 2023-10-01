@@ -1,4 +1,5 @@
 from django.db.models.query import Q
+from uuid import UUID
 
 from application.dtos.base import BaseDto
 from application.interfaces.commands.base import IBaseCommand
@@ -38,7 +39,7 @@ class BaseCommand(IBaseCommand):
         handler: BaseHandler = self.handler()
         return handler.update(dto, serialize=serialize)
 
-    def partial_update(self, pk, data, serialize=True):
+    def partial_update(self, pk: UUID, data: dict, serialize=True):
         handler: BaseHandler = self.handler()
         return handler.partial_update(pk=pk, data=data, serialize=serialize)
 
