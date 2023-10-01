@@ -3,12 +3,10 @@ from uuid import UUID
 
 from application.dtos.base import BaseDto
 from application.interfaces.handlers.base import IBaseHandler
-from application.interfaces.validators import IValidator
 
 
 class IBaseCommand(ABC):
     handler: IBaseHandler
-    validator: IValidator
     Dto: BaseDto
 
     @abstractmethod
