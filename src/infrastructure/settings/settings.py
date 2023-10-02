@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'drf_spectacular',
+    'django_filters',
     'corsheaders',
     'django_celery_beat',
 
