@@ -19,7 +19,7 @@ class CamelizeRenderer(JSONRenderer):
             response['key'] = data.get('key') if 'key' in data else ''
             response['errors'] = data.get('errors') if 'errors' in data else data
         else:
-            response['data'] = data.get('data') if isinstance(data, dict) and data.get('data') else data
+            response['data'] = data.get('data') if isinstance(data, dict) and 'data' in data else data
 
         camelize = CamelCaseJSONRenderer().render(response, accepted_media_type, renderer_context)
         return camelize
