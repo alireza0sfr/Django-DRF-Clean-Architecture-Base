@@ -44,6 +44,8 @@ services:
     command: sh -c "python3 manage.py migrate --noinput && python3 manage.py init_admin && python3 manage.py collectstatic --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
     volumes:
       - ../src:/app
+      - static_volume:/app/presentation/static
+      - media_volume:/app/presentation/media
     depends_on:
       db:
         condition: service_healthy
@@ -91,8 +93,8 @@ services:
       - "80:80"
     volumes:
       - ../nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static_volume:/home/app/static
-      - media_volume:/home/app/media
+      - static_volume:/home/app/presentation/static
+      - media_volume:/home/app/presentation/media
     depends_on:
       - backend
       - worker
