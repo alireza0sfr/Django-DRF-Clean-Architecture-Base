@@ -38,7 +38,7 @@ development_urls = [
     path('test/', SampleViewSet.as_view({'get': 'retrieve'}, name='test'))
 ]
 production_urls = [
-    path(f'{config("ADMIN_SECURE_LOGIN_ROUTE")}', admin.site.urls),
+    path(f'{config("ADMIN_SECURE_LOGIN_ROUTE")}/', admin.site.urls),
     path("admin/", HoneypotLoginView.as_view(), name="honeypot-login"),
 ]
 
