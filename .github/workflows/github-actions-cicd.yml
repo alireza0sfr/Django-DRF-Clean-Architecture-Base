@@ -2,14 +2,12 @@ name: Django Project Test and Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-
   Test:
-
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: test
@@ -45,53 +43,52 @@ jobs:
           POSTGRES_PASSWORD: ${{ env.DB_PASS }}
         ports:
           - 5432:5432
-        options:
-          --health-cmd pg_isready
+        options: --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v2.4.0
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v2.3.1
-      with:
-        python-version: 3.11
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-        installer-parallel: true
-    - name: Install the project dependencies
-      run: poetry install
-    - name: Run migrations
-      working-directory: ./src
-      run: |
-        source ${{ github.workspace }}/.venv/bin/activate
-        python manage.py migrate
-    - name: Run tests
-      working-directory: ./src
-      run: |
-        source ${{ github.workspace }}/.venv/bin/activate
-        pytest .
+      - uses: actions/checkout@v2.4.0
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2.3.1
+        with:
+          python-version: 3.11
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install the project dependencies
+        run: poetry install
+      - name: Run migrations
+        working-directory: ./src
+        run: |
+          source ${{ github.workspace }}/.venv/bin/activate
+          python manage.py migrate
+      - name: Run tests
+        working-directory: ./src
+        run: |
+          source ${{ github.workspace }}/.venv/bin/activate
+          pytest .
 
   Deploy:
-    # if: ${{ always() && contains(join(needs.*.result, ','), 'success') }} 
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     name: Deploy
     needs: Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Connect and Execute Commands
-      uses: appleboy/ssh-action@master
-      with:
-        username: ${{secrets.USERNAME}}
-        password: ${{secrets.PASSWORD}}
-        host: ${{secrets.HOST}}
-        port: ${{secrets.PORT}}
-        script: |
-          cd ${{secrets.PROJECT_PATH}}
-          docker compose -f docker-compose-stage.yml stop
-          git pull
-          docker compose -f docker-compose-stage.yml restart
+      - uses: actions/checkout@v3
+      - name: Connect and Execute Commands
+        uses: appleboy/ssh-action@master
+        with:
+          username: ${{secrets.USERNAME}}
+          password: ${{secrets.PASSWORD}}
+          host: ${{secrets.HOST}}
+          port: ${{secrets.PORT}}
+          script: |
+            cd ${{secrets.PROJECT_PATH}}
+            docker-compose -f docker/docker-compose-prod.yml stop
+            git pull
+            docker-compose -f docker/docker-compose-prod.yml restart
