@@ -93,15 +93,32 @@ class CustomUserAdmin(UserAdmin):
     def save_form(self, request, form, change):
         if not change:
 
-            if form.cleaned_data['is_superuser']:
-                form.instance = self.model.objects.create_superuser(form.cleaned_data['username'],
-                                                                    form.cleaned_data['email'],
-                                                                    form.cleaned_data['password1'])
+            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password1"]
+            additional = {
+                "is_staff": form.cleaned_data["is_staff"],
+                "is_active": form.cleaned_data["is_active"],
+                "is_superuser": form.cleaned_data["is_superuser"],
+                "is_hidden": form.cleaned_data["is_hidden"],
+                "is_verified": form.cleaned_data["is_verified"],
+            }
+
+            if form.cleaned_data["is_superuser"]:
+                form.instance = self.model.objects.create_superuser(
+                    username=username,
+                    email=email,
+                    password=password,
+                    **additional,
+                )
 
             else:
-                form.instance = self.model.objects.create_user(form.cleaned_data['username'],
-                                                               form.cleaned_data['email'],
-                                                               form.cleaned_data['password1'])
+                form.instance = self.model.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    **additional,
+                )
         return super().save_form(request, form, change)
 
 
