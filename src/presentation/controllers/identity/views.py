@@ -12,7 +12,7 @@ from infrastructure.services.token import TokenService
 
 User = get_user_model()
 
-class AuthenticationViewSet(UserViewSet):
+class IdentityModelViewSet(UserViewSet):
     
     def list(self, request, *args, **kwargs):
         queryset = User.objects.filter(Q(is_hidden=False))
