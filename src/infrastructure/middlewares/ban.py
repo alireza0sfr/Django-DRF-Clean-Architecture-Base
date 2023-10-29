@@ -1,14 +1,15 @@
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
+from django.http import JsonResponse
 
-from infrastructure.exceptions.exceptions import UserBanException
+from rest_framework import status
+
 from infrastructure.handlers.identity.ban import UserBanHandler, IPBanHandler
 from infrastructure.services.ip import IPService
 
 
 class BanMiddleware(MiddlewareMixin):
-
     @staticmethod
     def process_request(request):
         assert hasattr(request, "session"), (
@@ -26,24 +27,40 @@ class BanMiddleware(MiddlewareMixin):
             user.save()
 
             user_ban_handler = UserBanHandler()
-            user_ban = user_ban_handler.filter(Q(user=user, until__gt=timezone.now()))
+            user_ban = user_ban_handler.filter(
+                Q(user=user, until__gt=timezone.now()), serialize=False
+            )
 
             if user_ban:
-                raise UserBanException(errors=[
+                return JsonResponse(
                     {
-                        'until': user_ban[0].until,
-                        'reason': user_ban[0].reason,
-                        'description': user_ban[0].description
-                    }
-                ])
+                        "success": False,
+                        "key": "user_is_banned",
+                        "code": status.HTTP_403_FORBIDDEN,
+                        "data": {
+                            "until": user_ban[0].until,
+                            "reason": user_ban[0].reason,
+                            "description": user_ban[0].description,
+                        },
+                    },
+                    status=status.HTTP_403_FORBIDDEN,
+                )
 
         ip_ban_handler = IPBanHandler()
-        ip_ban = ip_ban_handler.filter(Q(ip=ip, until__gt=timezone.now()))
+        ip_ban = ip_ban_handler.filter(
+            Q(ip=ip, until__gt=timezone.now()), serialize=False
+        )
         if ip_ban:
-            raise UserBanException(errors=[
+            return JsonResponse(
                 {
-                    'until': ip_ban[0].until,
-                    'reason': ip_ban[0].reason,
-                    'description': ip_ban[0].description
-                }
-            ])
+                    "success": False,
+                    "key": "user_is_banned",
+                    "code": status.HTTP_403_FORBIDDEN,
+                    "data": {
+                        "until": ip_ban[0].until,
+                        "reason": ip_ban[0].reason,
+                        "description": ip_ban[0].description,
+                    },
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
