@@ -23,12 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(",")]
+)
 
 # Application definition
 
@@ -39,28 +41,25 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Third Party
-    'rest_framework',
-    'drf_spectacular',
-    'django_filters',
-    'corsheaders',
-    'django_celery_beat',
-
+    "rest_framework",
+    "drf_spectacular",
+    "django_filters",
+    "corsheaders",
+    "django_celery_beat",
     # Authentication
-    'rest_framework_simplejwt',
-    'djoser',
-
+    "rest_framework_simplejwt",
+    "djoser",
     # Apps
     ## Django apps will be auto registered!
 ]
 
-APPS_DIRECTORY = 'domain/apps'
+APPS_DIRECTORY = "domain/apps"
 
 for app_path in (BASE_DIR / APPS_DIRECTORY).iterdir():
     # Check if it's a directory and contains an 'apps.py' file
-    if app_path.is_dir() and (app_path / 'apps.py').exists():
-        app = app_path.relative_to(BASE_DIR).as_posix().replace('/', '.')
+    if app_path.is_dir() and (app_path / "apps.py").exists():
+        app = app_path.relative_to(BASE_DIR).as_posix().replace("/", ".")
         INSTALLED_APPS.append(app)
 
 MIDDLEWARE = [
@@ -73,7 +72,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "infrastructure.middlewares.ban.BanMiddleware",
-    "infrastructure.middlewares.unhandled_exceptions.UnhandledExceptionsMiddleware",
 ]
 
 ROOT_URLCONF = "presentation.api.urls"
@@ -81,7 +79,7 @@ ROOT_URLCONF = "presentation.api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / 'presentation/templates'],
+        "DIRS": [BASE_DIR / "presentation/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -101,12 +99,12 @@ WSGI_APPLICATION = "infrastructure.server.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": config('DB_ENGINE'),
-        "NAME": config('DB_NAME'),
-        "USER": config('DB_USER'),
-        "PASSWORD": config('DB_PASS'),
-        "HOST": config('DB_HOST'),
-        "PORT": config('DB_PORT', cast=int),
+        "ENGINE": config("DB_ENGINE"),
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASS"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT", cast=int),
         "CONN_HEALTH_CHECKS": True,
     }
 }
@@ -143,114 +141,110 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'presentation/static'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "presentation/static"
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'presentation/media'
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "presentation/media"
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'presentation/staticfiles'
-]
+STATICFILES_DIRS = [BASE_DIR / "presentation/staticfiles"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 # Rest Framework
 REST_FRAMEWORK = {
-
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-
-    'DEFAULT_RENDERER_CLASSES': (
-        'presentation.renderers.camelize_renderer.CamelizeRenderer',
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+    "DEFAULT_RENDERER_CLASSES": (
+        "presentation.renderers.camelize_renderer.CamelizeRenderer",
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
         # Any other renders
     ),
-
-    'DEFAULT_PARSER_CLASSES': (
+    "DEFAULT_PARSER_CLASSES": (
         # If you use MultiPartFormParser or FormParser, we also have a camel case version
-        'djangorestframework_camel_case.parser.CamelCaseFormParser',
-        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
-        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
         # Any other parsers
     ),
-
-    'JSON_UNDERSCOREIZE': {
-        'no_underscore_before_number': True,
+    "JSON_UNDERSCOREIZE": {
+        "no_underscore_before_number": True,
     },
-
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-
-    'EXCEPTION_HANDLER': 'infrastructure.exceptions.custom_handlers.custom_exception_handler'
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "infrastructure.exceptions.custom_handlers.custom_exception_handler",
 }
 
 # Authentication
 DJOSER = {
-    'HIDE_USERS': True,
-    'LOGIN_ON_REGISTER': True,
-    'LOGIN_FIELD': 'username',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': False,
-    'USER_CREATE_PASSWORD_RETYPE': False,
-    'SET_USERNAME_RETYPE': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'USERNAME_RESET_CONFIRM_RETYPE': True,
-    'LOGOUT_ON_PASSWORD_CHANGE': True,
-    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
-    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'frontend-url-for-password-change/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'frontend-url-for-username-change/{uid}/{token}',
-    'SERIALIZERS': {
-        'activation': 'infrastructure.serializers.identity.serializers.IdTokenSerializer',
-        'password_reset_confirm': 'infrastructure.serializers.identity.serializers.PasswordResetConfirmSerializer',
-        'password_reset_confirm_retype': 'infrastructure.serializers.identity.serializers.PasswordResetRetypeConfirmSerializer',
-        'user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
-        'current_user': 'infrastructure.serializers.identity.serializers.UserModelSerializer',
-        'user_create': 'infrastructure.serializers.identity.serializers.UserRegisterSerializer',
+    "HIDE_USERS": True,
+    "LOGIN_ON_REGISTER": True,
+    "LOGIN_FIELD": "username",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": False,
+    "USER_CREATE_PASSWORD_RETYPE": False,
+    "SET_USERNAME_RETYPE": True,
+    "SET_PASSWORD_RETYPE": True,
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "USERNAME_RESET_CONFIRM_RETYPE": True,
+    "LOGOUT_ON_PASSWORD_CHANGE": True,
+    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
+    "USERNAME_RESET_SHOW_EMAIL_NOT_FOUND": True,
+    "PASSWORD_RESET_CONFIRM_URL": "frontend-url-for-password-change/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "frontend-url-for-username-change/{uid}/{token}",
+    "SERIALIZERS": {
+        "activation": "infrastructure.serializers.identity.serializers.IdTokenSerializer",
+        "password_reset_confirm": "infrastructure.serializers.identity.serializers.PasswordResetConfirmSerializer",
+        "password_reset_confirm_retype": "infrastructure.serializers.identity.serializers.PasswordResetRetypeConfirmSerializer",
+        "user": "infrastructure.serializers.identity.serializers.UserModelSerializer",
+        "current_user": "infrastructure.serializers.identity.serializers.UserModelSerializer",
+        "user_create": "infrastructure.serializers.identity.serializers.UserRegisterSerializer",
     },
-    'PERMISSIONS': {
-        'activation': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'password_reset': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'password_reset_confirm': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'set_password': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'username_reset': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'username_reset_confirm': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'set_username': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'user_create': ['rest_framework.permissions.AllowAny'],
-        'user_delete': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'user': ['application.permissions.permissions.CurrentUserOrAdmin'],
-        'user_list': ['rest_framework.permissions.AllowAny'],
-    }
+    "PERMISSIONS": {
+        "activation": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "password_reset": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "password_reset_confirm": [
+            "application.permissions.permissions.CurrentUserOrAdmin"
+        ],
+        "set_password": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "username_reset": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "username_reset_confirm": [
+            "application.permissions.permissions.CurrentUserOrAdmin"
+        ],
+        "set_username": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "user_create": ["rest_framework.permissions.AllowAny"],
+        "user_delete": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "user": ["application.permissions.permissions.CurrentUserOrAdmin"],
+        "user_list": ["rest_framework.permissions.AllowAny"],
+    },
 }
 
 # Jwt
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    'UPDATE_LAST_LOGIN': True,
+    "UPDATE_LAST_LOGIN": True,
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
     "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.identity.serializers.TokenObtainPairSerializer",
 }
 
 # Authentication
-AUTH_USER_MODEL = 'identity.User'
+AUTH_USER_MODEL = "identity.User"
 
 # DRF spectacular
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Django-DRF-Clean-Architecture-Base',
-    'DESCRIPTION': 'Lorem',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    'SCHEMA_PATH_PREFIX': r'/api/v[0-9].[0-9]/',
-    'SERVE_PERMISSIONS': ['application.permissions.permissions.IsAdminUser'],
+    "TITLE": "Django-DRF-Clean-Architecture-Base",
+    "DESCRIPTION": "Lorem",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9].[0-9]/",
+    "SERVE_PERMISSIONS": ["application.permissions.permissions.IsAdminUser"],
     "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "persistAuthorization": True,
@@ -261,44 +255,45 @@ SPECTACULAR_SETTINGS = {
 # Logging
 
 # Create the "logs" directory if it doesn't exist
-LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} | {asctime} | {module} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} | {asctime} | {module} {message}",
+            "style": "{",
         },
     },
     "handlers": {
         "console": {
-            "level": config('CONSOLE_LOG_LEVEL'),
+            "level": config("CONSOLE_LOG_LEVEL"),
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-        'file': {
-            "level": config('FILE_LOG_LEVEL'),
-            'class': 'logging.FileHandler',
-            'filename': Path(LOGS_DIR) / f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log',
-            'formatter': 'verbose',
+        "file": {
+            "level": config("FILE_LOG_LEVEL"),
+            "class": "logging.FileHandler",
+            "filename": Path(LOGS_DIR)
+            / f'{config("APP_NAME")}-{datetime.now():%Y-%m-%d}.log',
+            "formatter": "verbose",
         },
-        'seq': {
-            "level": config('SEQ_LOG_LEVEL'),
-            'class': 'seqlog.SeqLogHandler',
-            'server_url': 'http://seq:5341',
+        "seq": {
+            "level": config("SEQ_LOG_LEVEL"),
+            "class": "seqlog.SeqLogHandler",
+            "server_url": "http://seq:5341",
         },
     },
     "root": {
-        "handlers": config('LOG_HANDLERS', cast=Csv()),
+        "handlers": config("LOG_HANDLERS", cast=Csv()),
         "level": "WARNING",
     },
     "loggers": {
         "django": {
-            "handlers": config('LOG_HANDLERS', cast=Csv()),
-            "level": config('CONSOLE_LOG_LEVEL'),
+            "handlers": config("LOG_HANDLERS", cast=Csv()),
+            "level": config("CONSOLE_LOG_LEVEL"),
             "propagate": False,
         },
     },
@@ -332,17 +327,17 @@ if not DEBUG:
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Celery Configs
-CELERY_BROKER_URL = 'redis://redis:6379/1'
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = "redis://redis:6379/1"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-# Cache 
+# Cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 
@@ -358,10 +353,10 @@ else:
     EMAIL_BACKEND = config(
         "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
     )
-    EMAIL_HOST = config('EMAIL_HOST')
-    EMAIL_PORT = config('EMAIL_PORT', cast=int)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-    EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-    DEFAULT_FROM_EMAIL = config('EMAIL_DEFAULT_FROM_EMAIL')
+    EMAIL_HOST = config("EMAIL_HOST")
+    EMAIL_PORT = config("EMAIL_PORT", cast=int)
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool)
+    EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+    DEFAULT_FROM_EMAIL = config("EMAIL_DEFAULT_FROM_EMAIL")

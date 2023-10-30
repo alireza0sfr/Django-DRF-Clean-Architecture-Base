@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from rest_framework import status
 
+from infrastructure.responses.responses import UserBanResponse
 from infrastructure.handlers.identity.ban import UserBanHandler, IPBanHandler
 from infrastructure.services.ip import IPService
 
@@ -32,18 +33,12 @@ class BanMiddleware(MiddlewareMixin):
             )
 
             if user_ban:
-                return JsonResponse(
+                return UserBanResponse(
                     {
-                        "success": False,
-                        "key": "user_is_banned",
-                        "code": status.HTTP_403_FORBIDDEN,
-                        "data": {
-                            "until": user_ban[0].until,
-                            "reason": user_ban[0].reason,
-                            "description": user_ban[0].description,
-                        },
+                        "until": user_ban[0].until,
+                        "reason": user_ban[0].reason,
+                        "description": user_ban[0].description,
                     },
-                    status=status.HTTP_403_FORBIDDEN,
                 )
 
         ip_ban_handler = IPBanHandler()
@@ -51,16 +46,10 @@ class BanMiddleware(MiddlewareMixin):
             Q(ip=ip, until__gt=timezone.now()), serialize=False
         )
         if ip_ban:
-            return JsonResponse(
+            return UserBanResponse(
                 {
-                    "success": False,
-                    "key": "user_is_banned",
-                    "code": status.HTTP_403_FORBIDDEN,
-                    "data": {
-                        "until": ip_ban[0].until,
-                        "reason": ip_ban[0].reason,
-                        "description": ip_ban[0].description,
-                    },
+                    "until": ip_ban[0].until,
+                    "reason": ip_ban[0].reason,
+                    "description": ip_ban[0].description,
                 },
-                status=status.HTTP_403_FORBIDDEN,
             )
