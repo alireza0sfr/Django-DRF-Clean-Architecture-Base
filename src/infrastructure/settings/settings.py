@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     # Authentication
     "rest_framework_simplejwt",
     "djoser",
+    # Debug
+    "debug_toolbar",
     # Apps
     ## Django apps will be auto registered!
 ]
@@ -65,6 +67,7 @@ for app_path in (BASE_DIR / APPS_DIRECTORY).iterdir():
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -360,3 +363,14 @@ else:
     EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool)
     EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
     DEFAULT_FROM_EMAIL = config("EMAIL_DEFAULT_FROM_EMAIL")
+
+
+# Django Debug Toolbar
+if DEBUG:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
+        "127.0.0.1",
+        "10.0.2.2",
+    ]
