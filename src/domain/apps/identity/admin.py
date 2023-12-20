@@ -12,6 +12,7 @@ from .models import UserBan, IPBan
 
 User = get_user_model()
 
+
 class UserCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -21,7 +22,14 @@ class UserCreationForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden']
+        fields = [
+            "username",
+            "email",
+            "is_active",
+            "is_verified",
+            "is_staff",
+            "is_hidden",
+        ]
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -38,6 +46,7 @@ class UserCreationForm(ModelForm):
         if commit:
             user.save()
         return user
+
 
 class UserChangeForm(ModelForm):
     """A form for updating users. Includes all the fields on
@@ -56,7 +65,14 @@ class UserChangeForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_active', 'is_verified', 'is_superuser', 'is_staff', 'is_hidden']
+        fields = [
+            "username",
+            "email",
+            "is_active",
+            "is_verified",
+            "is_staff",
+            "is_hidden",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,45 +82,59 @@ class UserChangeForm(ModelForm):
                 f"../../{self.instance.pk}/password/"
             )
 
+
 class CustomUserAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     model = User
     list_display = (
-        'id', 'username', 'email', 'last_login', 'date_joined', 'last_used_ip', 'is_staff', 'is_active', 'is_superuser',
-        'is_hidden',
-        'is_verified')
+        "id",
+        "username",
+        "email",
+        "last_login",
+        "date_joined",
+        "last_used_ip",
+        "is_staff",
+        "is_active",
+        "is_superuser",
+        "is_hidden",
+        "is_verified",
+    )
     list_filter = list_display
-    search_fields = ('id', 'email', 'username')
+    search_fields = ("id", "email", "username")
     ordering = search_fields
     fieldsets = (
-        ('Authentication', {'fields': ('username', 'email', 'password')}),
-        ('Permission', {'fields': ('is_staff', 'is_active', 'is_superuser', 'is_hidden', 'is_verified')}),
-        ('Group Permissions', {'fields': ('groups', 'user_permissions')}),
-        ('Metadata', {'fields': ('last_login', 'date_joined', 'last_used_ip')}),
-
+        ("Authentication", {"fields": ("username", "email", "password")}),
+        (
+            "Permission",
+            {"fields": ("is_staff", "is_active", "is_hidden", "is_verified")},
+        ),
+        ("Group Permissions", {"fields": ("groups", "user_permissions")}),
+        ("Metadata", {"fields": ("last_login", "date_joined", "last_used_ip")}),
     )
     add_fieldsets = (
-        ('Authentication', {'fields': ('username', 'email', 'password1', 'password2')}),
-        ('Permission', {'fields': ('is_staff', 'is_active', 'is_superuser', 'is_hidden', 'is_verified')}),
-        ('Meta Data', {'fields': ('date_joined',)})
+        ("Authentication", {"fields": ("username", "email", "password1", "password2")}),
+        (
+            "Permission",
+            {"fields": ("is_staff", "is_active", "is_hidden", "is_verified")},
+        ),
+        ("Meta Data", {"fields": ("date_joined",)}),
     )
 
     def save_form(self, request, form, change):
         if not change:
-
             username = form.cleaned_data["username"]
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password1"]
             additional = {
                 "is_staff": form.cleaned_data["is_staff"],
                 "is_active": form.cleaned_data["is_active"],
-                "is_superuser": form.cleaned_data["is_superuser"],
+                "is_superuser": form.cleaned_data.get("is_superuser", False),
                 "is_hidden": form.cleaned_data["is_hidden"],
                 "is_verified": form.cleaned_data["is_verified"],
             }
 
-            if form.cleaned_data["is_superuser"]:
+            if additional["is_superuser"]:
                 form.instance = self.model.objects.create_superuser(
                     username=username,
                     email=email,
@@ -123,28 +153,36 @@ class CustomUserAdmin(UserAdmin):
 
 
 class IsActiveFilter(admin.SimpleListFilter):
-    title = 'Is Active'
-    parameter_name = 'is_active'
+    title = "Is Active"
+    parameter_name = "is_active"
 
     def lookups(self, request, model_admin):
         return (
-            ('True', True),
-            ('False', False),
+            ("True", True),
+            ("False", False),
         )
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
+        if self.value() == "True":
             return queryset.filter(until__gt=timezone.now())
-        if self.value() == 'False':
+        if self.value() == "False":
             return queryset.filter(until__lte=timezone.now())
 
 
 class CustomUserBanAdmin(admin.ModelAdmin):
     model = UserBan
-    list_display = ('id', 'user', 'reason', 'active', 'description', 'until', 'created_date')
+    list_display = (
+        "id",
+        "user",
+        "reason",
+        "active",
+        "description",
+        "until",
+        "created_date",
+    )
     search_fields = list_display
-    list_filter = ('user__username', 'reason', IsActiveFilter)
-    ordering = ('id', 'user', 'reason', 'until', 'created_date')
+    list_filter = ("user__username", "reason", IsActiveFilter)
+    ordering = ("id", "user", "reason", "until", "created_date")
 
     @admin.display(empty_value=False)
     def active(self, obj):
@@ -155,10 +193,18 @@ class CustomUserBanAdmin(admin.ModelAdmin):
 
 class CustomIPBanAdmin(admin.ModelAdmin):
     model = IPBan
-    list_display = ('id', 'ip', 'reason', 'active', 'description', 'until', 'created_date')
+    list_display = (
+        "id",
+        "ip",
+        "reason",
+        "active",
+        "description",
+        "until",
+        "created_date",
+    )
     search_fields = list_display
-    list_filter = ('ip', 'reason', IsActiveFilter)
-    ordering = ('id', 'reason', 'until', 'created_date')
+    list_filter = ("ip", "reason", IsActiveFilter)
+    ordering = ("id", "reason", "until", "created_date")
 
     @admin.display(empty_value=False)
     def active(self, obj):
