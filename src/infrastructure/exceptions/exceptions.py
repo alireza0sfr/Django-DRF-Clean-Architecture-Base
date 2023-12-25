@@ -21,6 +21,18 @@ class EntityNotFoundException(BaseCustomException):
         super().__init__(message, status.HTTP_404_NOT_FOUND, key=key, errors=errors)
 
 
+class MultipleObjectsReturnedException(BaseCustomException):
+    def __init__(
+        self,
+        message="Multiple Objects Returned!",
+        key="multiple_objects_returned",
+        errors=None,
+    ):
+        super().__init__(
+            message, status.HTTP_500_INTERNAL_SERVER_ERROR, key=key, errors=errors
+        )
+
+
 class EntityDeleteRestrictedException(BaseCustomException):
     def __init__(
         self,

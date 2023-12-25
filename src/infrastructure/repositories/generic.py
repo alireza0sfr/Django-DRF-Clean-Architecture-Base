@@ -8,8 +8,12 @@ from typing import Callable
 from application.interfaces.repositories.generic import IGenericRepository
 from application.dtos.base import BaseDto
 
-from infrastructure.exceptions.exceptions import EntityNotFoundException, EntityDeleteProtectedException, \
-    EntityDeleteRestrictedException
+from infrastructure.exceptions.exceptions import (
+    EntityNotFoundException,
+    EntityDeleteProtectedException,
+    EntityDeleteRestrictedException,
+    MultipleObjectsReturnedException,
+)
 from infrastructure.services.dto import DtoService
 
 
@@ -20,15 +24,20 @@ class GenericRepository(IGenericRepository):
     raise_serializer_exception: bool = True
 
     def __init__(self, raise_serializer_exception: bool = True):
-
         if not self.model:
-            raise ImproperlyConfigured('Repositories Should define a Model Property!')
+            raise ImproperlyConfigured("Repositories Should define a Model Property!")
 
         if not self.queryset and not isinstance(self.get_queryset, Callable):
-            raise ImproperlyConfigured('Repositories Should define either a QuerySet Property or get_queryset Method!')
+            raise ImproperlyConfigured(
+                "Repositories Should define either a QuerySet Property or get_queryset Method!"
+            )
 
-        if not self.serializer_class and not isinstance(self.serializer_class, Serializer):
-            raise ImproperlyConfigured('Repositories Should define either a serializer_class Property!')
+        if not self.serializer_class and not isinstance(
+            self.serializer_class, Serializer
+        ):
+            raise ImproperlyConfigured(
+                "Repositories Should define either a serializer_class Property!"
+            )
 
         if self.queryset is None:
             self.queryset = self.get_queryset()
@@ -39,7 +48,6 @@ class GenericRepository(IGenericRepository):
         return self.model.objects.all()
 
     def serialize(self, dto: BaseDto | list[BaseDto], many: bool = False) -> Serializer:
-
         dto_service = DtoService()
 
         if many:
@@ -56,13 +64,15 @@ class GenericRepository(IGenericRepository):
             return self.queryset.get(expression)
         except self.model.DoesNotExist:
             raise EntityNotFoundException()
+        except self.model.MultipleObjectsReturned:
+            raise MultipleObjectsReturnedException()
 
     def filter(self, expression: Q) -> QuerySet:
         return self.queryset.filter(expression)
 
     def get_by_pk(self, pk: UUID) -> QuerySet:
         return self.get(Q(pk=pk))
-    
+
     def get_list(self) -> QuerySet:
         return self.queryset
 
@@ -78,7 +88,6 @@ class GenericRepository(IGenericRepository):
         return serializer.save()
 
     def delete(self, expression: Q) -> QuerySet:
-
         try:
             return self.filter(expression).delete()
         except RestrictedError:
@@ -90,7 +99,9 @@ class GenericRepository(IGenericRepository):
 
     def update(self, dto: BaseDto) -> QuerySet:
         dto_service = DtoService()
-        serializer = self.serializer_class(self.get_by_pk(dto.id), data=dto_service.asdict(dto), partial=False)
+        serializer = self.serializer_class(
+            self.get_by_pk(dto.id), data=dto_service.asdict(dto), partial=False
+        )
         serializer.is_valid(raise_exception=self.raise_serializer_exception)
 
         try:
