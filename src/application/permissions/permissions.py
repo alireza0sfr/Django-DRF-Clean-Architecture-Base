@@ -12,9 +12,9 @@ class BasePermission(permissions.BasePermission):
 
 
 class IsSuperUser(BasePermission):
-    """Allows access only to superusers."""
+    
     def has_object_permission(self, request, view, obj):
-        return True
+        return bool(request.user.is_superuser)
 
     def has_permission(self, request, view):
         parent_access = super().has_permission(request, view)
@@ -24,7 +24,8 @@ class IsSuperUser(BasePermission):
 class IsAdminUser(BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        return True
+        parent_access = super().has_object_permission(request, view, obj)   
+        return parent_access or bool(request.user and request.user.is_staff)  
 
     def has_permission(self, request, view):
         parent_access = super().has_permission(request, view)

@@ -31,7 +31,7 @@ class IdentityModelViewSet(UserViewSet):
         serializer = serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        command = UserCommand()
+        command = UserCommand(self, request)
         response = command.create(request.data)
 
         login = settings.DJOSER.get('LOGIN_ON_REGISTER')
