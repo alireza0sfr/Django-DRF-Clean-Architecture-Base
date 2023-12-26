@@ -2,6 +2,7 @@ from rest_framework.views import exception_handler
 from infrastructure.exceptions.exceptions import BaseCustomException
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import APIException
 
 
 def custom_exception_handler(exc, context):
@@ -12,7 +13,7 @@ def custom_exception_handler(exc, context):
         response.data["key"] = exc.key
 
     # Handle Python exceptions
-    elif isinstance(exc, Exception):
+    elif isinstance(exc, Exception) and not isinstance(exc, APIException):
         response = Response(
             data={
                 "errors": exc.args,
