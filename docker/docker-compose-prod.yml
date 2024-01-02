@@ -5,14 +5,17 @@ services:
     container_name: redis
     image: redis
     restart: always
-    ports:
-    - "6379:6379"
+    networks:
+      - networkbackend
     command: redis-server --save 60 1 --loglevel warning
 
   seq:
     image: datalust/seq:latest
     container_name: seq
     restart: always
+    networks:
+      - networkbackend
+      - networkfront
     ports:
       - "5341:80"
     environment:
@@ -25,6 +28,8 @@ services:
     container_name: db
     image: postgres:alpine
     restart: always
+    networks:
+      - networkdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
@@ -40,6 +45,10 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: backend
+    networks:
+      - networkbackend
+      - networkfront
+      - networkdb
     restart: always
     command: sh -c "python3 manage.py migrate --noinput && python3 manage.py init_admin && python3 manage.py collectstatic --noinput && gunicorn infrastructure.server.wsgi --bind 0.0.0.0:8000"
     volumes:
@@ -64,6 +73,9 @@ services:
       dockerfile: docker/Dockerfile
     command: celery -A infrastructure.celery.celery:app worker --loglevel=info
     restart: always
+    networks:
+      - networkbackend
+      - networkdb
     volumes:
       - ../src:/app
     env_file:
@@ -78,6 +90,9 @@ services:
     container_name: beat
     command: celery -A infrastructure.celery.celery:app beat --loglevel=info
     restart: always
+    networks:
+      - networkbackend
+      - networkdb
     volumes:
       - ../src:/app
     env_file:
@@ -89,6 +104,8 @@ services:
     image: nginx
     container_name: nginx
     restart: always
+    networks:
+      - networkfront
     ports: 
       - "80:80"
     volumes:
@@ -99,6 +116,17 @@ services:
       - backend
       - worker
       - beat
+
+networks:
+  networkbackend:
+    driver: bridge
+    name: networkBackend
+  networkfront:
+    driver: bridge
+    name: networkFront
+  networkdb:
+    driver: bridge
+    name: networkDB
 
 volumes:
   seq-data:
