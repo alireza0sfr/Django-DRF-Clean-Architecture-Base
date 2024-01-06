@@ -13,7 +13,7 @@ class BaseJsonResponse(JsonResponse):
         self.code = code
         self.key = key
 
-        super().__init__(data=self.prepare_data(), **kwargs)
+        super().__init__(data=self.prepare_data(), **kwargs, status=self.code)
 
     def prepare_data(self):
         return {
@@ -21,7 +21,7 @@ class BaseJsonResponse(JsonResponse):
             "key": self.key,
             "code": self.code,
             "message": self.message,
-            "data": json.dumps(self.data, cls=DjangoJSONEncoder),
+            "data": self.data,
         }
 
 
