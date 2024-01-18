@@ -202,12 +202,12 @@ DJOSER = {
     "PASSWORD_RESET_CONFIRM_URL": "frontend-url-for-password-change/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL": "frontend-url-for-username-change/{uid}/{token}",
     "SERIALIZERS": {
-        "activation": "infrastructure.serializers.identity.serializers.IdTokenSerializer",
-        "password_reset_confirm": "infrastructure.serializers.identity.serializers.PasswordResetConfirmSerializer",
-        "password_reset_confirm_retype": "infrastructure.serializers.identity.serializers.PasswordResetRetypeConfirmSerializer",
-        "user": "infrastructure.serializers.identity.serializers.UserModelSerializer",
-        "current_user": "infrastructure.serializers.identity.serializers.UserModelSerializer",
-        "user_create": "infrastructure.serializers.identity.serializers.UserRegisterSerializer",
+        "activation": "infrastructure.serializers.identity.IdTokenSerializer",
+        "password_reset_confirm": "infrastructure.serializers.identity.PasswordResetConfirmSerializer",
+        "password_reset_confirm_retype": "infrastructure.serializers.identity.PasswordResetRetypeConfirmSerializer",
+        "user": "infrastructure.serializers.identity.UserModelSerializer",
+        "current_user": "infrastructure.serializers.identity.UserModelSerializer",
+        "user_create": "infrastructure.serializers.identity.UserRegisterSerializer",
     },
     "PERMISSIONS": {
         "activation": ["application.permissions.permissions.CurrentUserOrAdmin"],
@@ -234,7 +234,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "UPDATE_LAST_LOGIN": True,
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-    "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.identity.serializers.TokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "infrastructure.serializers.identity.TokenObtainPairSerializer",
 }
 
 # Authentication

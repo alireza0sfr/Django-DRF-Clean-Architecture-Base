@@ -11,7 +11,7 @@ from infrastructure.handlers.base import BaseHandler
 from infrastructure.handlers.identity.ban import UserBanHandler
 from infrastructure.repositories.identity.ban import UserBanRepository
 from infrastructure.repositories.identity.user import UserRepository
-from infrastructure.serializers.identity.serializers import UserModelSerializer
+from infrastructure.serializers.identity import UserModelSerializer
 from infrastructure.exceptions.exceptions import EntityNotFoundException, UserNotBannedException
 
 

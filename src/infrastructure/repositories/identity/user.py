@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from infrastructure.repositories.generic import GenericRepository
-from infrastructure.serializers.identity.serializers import UserModelSerializer
+from infrastructure.serializers.identity import UserModelSerializer
 
 User = get_user_model()
 

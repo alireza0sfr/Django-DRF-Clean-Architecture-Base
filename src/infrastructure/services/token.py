@@ -4,7 +4,7 @@ import jwt
 
 from domain.apps.identity.models import User
 from application.interfaces.services.token import ITokenService
-from infrastructure.serializers.identity.serializers import UserModelSerializer
+from infrastructure.serializers.identity import UserModelSerializer
 from infrastructure.exceptions.exceptions import InvalidTokenException
 
 

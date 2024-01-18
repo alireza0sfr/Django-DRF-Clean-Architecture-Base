@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from domain.apps.identity.models import IPBan, UserBan
 from infrastructure.repositories.generic import GenericRepository
-from infrastructure.serializers.identity.serializers import UserBanModelSerializer, IPBanModelSerializer
+from infrastructure.serializers.identity import UserBanModelSerializer, IPBanModelSerializer
 
 
 class UserBanRepository(GenericRepository):
